@@ -1,28 +1,79 @@
-<template>
+ <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+<!--    <Register/>-->
+    <HomePage/>
+<!--    <router-view></router-view>-->
+<!--    <MyLogin/>-->
+    <el-backtop style="right: 8px;bottom: 80px;color: rgb(95,99,104);border-radius: 0">
+      <div class="backToTop">
+        <i class="el-icon-top"></i>
+        <span>顶部</span>
+      </div>
+    </el-backtop>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+// import Register from "@/components/Register.vue";
+import HomePage from "@/components/HomePage.vue";
+// import MyLogin from "@/components/Login.vue";
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  components:{
+    HomePage
+    // MyLogin
+    // Register
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+*{
+  margin: 0;
+  padding: 0;
+}
+
+.el-backtop {
+  position: fixed;
+  background-color: #fff;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 0 6px rgba(0,0,0,.12);
+  cursor: pointer;
+  z-index: 5;
+}
+
+.backToTop{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.el-icon-top{
+  speak: none;
+  font-style: normal;
+  font-weight: 400;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  vertical-align: baseline;
+  display: inline-block;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+}
+
+.el-icon-top:before {
+  content: "\e6e6";
+}
+
+.el-backtop .backToTop span {
+  font-size: 12px;
 }
 </style>
