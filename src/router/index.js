@@ -1,0 +1,65 @@
+import VueRouter from "vue-router"
+
+
+//创建并暴露一个路由器
+export default new VueRouter({
+    routes:[
+        {
+          path:'/',
+            // 初始路由
+          redirect:'/homePage'
+        },
+        {
+            path:'/homePage',
+            component:()=>import("@/page/HomePage.vue")
+        },
+        {
+            path:'/aboutUs',
+            component:()=>import("@/page/AboutUs.vue")
+        },
+        {
+            path:'/productDynamic',
+            component:()=>import("@/page/AboutUs.vue")
+        },
+        {
+            path:'/clauseService',
+            component:()=>import("@/page/AboutUs.vue")
+        },
+        {
+            path:'/downloadBrowse',
+            component:()=>import("@/page/AboutUs.vue")
+        },
+        {
+            path:'/login',
+            component:()=>import("@/page/Login.vue")
+        },
+        {
+            path:'/register',
+            component:()=>import("@/page/Register.vue")
+        },
+        {
+            path:'/productFunction',
+            component:()=>import("@/page/AboutUs.vue")
+        },
+        {
+            path:'/mechanism',
+            component:()=>import("@/page/AboutUs.vue")
+        },
+        {
+            path:'/cooperation',
+            component:()=>import("@/page/AboutUs.vue")
+        },
+        {
+            path:'/vipPower',
+            component:()=>import("@/page/AboutUs.vue")
+        },
+        {
+            path:'/helpCenter',
+            component:()=>import("@/page/AboutUs.vue")
+        },
+        {
+            path:'/main',
+            component:()=>import("@/page/MyClass.vue")
+        }
+    ]
+})

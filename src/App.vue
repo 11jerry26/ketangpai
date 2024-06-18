@@ -1,9 +1,7 @@
  <template>
   <div id="app">
-<!--    <Register/>-->
-    <HomePage/>
-<!--    <router-view></router-view>-->
-<!--    <MyLogin/>-->
+<!--    展示当前路由所在页面-->
+    <router-view></router-view>
     <el-backtop style="right: 8px;bottom: 80px;color: rgb(95,99,104);border-radius: 0">
       <div class="backToTop">
         <i class="el-icon-top"></i>
@@ -14,16 +12,10 @@
 </template>
 
 <script>
-// import Register from "@/components/Register.vue";
-import HomePage from "@/components/HomePage.vue";
-// import MyLogin from "@/components/Login.vue";
 
 export default {
   name: 'App',
   components:{
-    HomePage
-    // MyLogin
-    // Register
   }
 }
 </script>
@@ -76,4 +68,5 @@ export default {
 .el-backtop .backToTop span {
   font-size: 12px;
 }
+
 </style>
