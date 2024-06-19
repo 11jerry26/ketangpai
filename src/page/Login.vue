@@ -136,7 +136,6 @@ export default {
             account: that.ruleForm.account,
             password: that.ruleForm.password
           })).then(function (response){
-            console.log(response.data)
             if (response.data.success === 1){
               localStorage.setExpire("token",response.data.token,1000*60*60*24*7)
               that.$router.push('/main')
