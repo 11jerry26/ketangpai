@@ -62,7 +62,7 @@
 
 <script>
 import axios from 'axios'
-import qs from "qs";
+// import qs from "qs";
 export default {
   name:'MyRegister',
   data() {
@@ -163,24 +163,19 @@ export default {
       if (that.activeTab === 'student'){
         this.$refs.ruleForm.validate((valid) => {
           if (valid){
-            axios.post('http://localhost:8088/student/register',that.ruleForm).then(function (response){
+            axios.post('http://localhost:8088/user/register',that.ruleForm).then(function (response){
               console.log(response.data)
-              if (response.data === '添加成功'){
-                axios.post("http://localhost:8088/user/student",qs.stringify({
-                  account: that.ruleForm.account,
-                  password: that.ruleForm.password,
-                  name: that.ruleForm.name,
-                  school: that.ruleForm.school
-                })).then(function (response){
-                  console.log(response.data)
-                })
+              if (response.data === '添加成功') {
                 that.$message({
                   message: '注册成功',
                   type: 'success'
                 })
                 that.$router.push("/login")
-              }
-              else{
+              } else if (response.data === '该学号已经存在'){
+                that.$message.error('用户已存在')
+              } else if (response.data === '该邮箱/手机号已经被注册') {
+                that.$message.error('该邮箱/手机号已经被注册')
+              } else {
                 that.$message.error('用户已存在')
               }
             })
@@ -195,19 +190,17 @@ export default {
         that.rules.id = null
         this.$refs.ruleForm1.validate((valid) => {
           if (valid){
-            axios.post('http://localhost:8088/teacher/register',that.ruleForm).then(function (response){
-              console.log(response.data)
-              if (response.data === '添加成功'){
-                axios.post('http://localhost:8088/user/teacher',that.ruleForm).then(function (response){
-                  console.log(response.data)
-                })
+            that.ruleForm.id = null;
+            axios.post('http://localhost:8088/user/register',that.ruleForm).then(function (response){
+              if (response.data === '添加成功') {
                 that.$message({
-                  message: '注册成功',
-                  type: 'success'
-                })
-                that.$router.push("/login")
-              }
-              else{
+                        message: '注册成功',
+                        type: 'success'
+                      })
+                      that.$router.push("/login")
+              } else if (response.data === '该邮箱/手机号已经被注册') {
+                that.$message.error('该邮箱/手机号已经被注册')
+              } else {
                 that.$message.error('用户已存在')
               }
             })
