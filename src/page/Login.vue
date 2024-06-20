@@ -137,6 +137,8 @@ export default {
             password: that.ruleForm.password
           })).then(function (response){
             if (response.data.success === 1){
+              that.ruleForm.account = '';
+              that.ruleForm.password = '';
               localStorage.setExpire("token",response.data.token,1000*60*60*24*7)
               that.$router.push('/main')
             }

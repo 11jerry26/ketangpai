@@ -240,27 +240,30 @@
           <hr>
           <el-tabs v-model="activeName3" @tab-click="handleClick">
             <el-tab-pane label="基本信息(必填)" name="essentialInformation">
-              <el-form :model="createRuleForm" status-icon :rules="createRules" ref="createRuleForm" class="demo-ruleForm">
+              <el-form :model="createRuleForm" status-icon :rules="createRules" ref="createRuleForm"
+                       class="demo-ruleForm">
                 <div class="item">
                   <img src="../assets/images/asterisk.png" alt="asterisk" class="asterisk">
                   <span class="left-word">课程名称</span>
-                  <el-form-item  prop="courseName">
-                    <el-input v-model="createRuleForm.courseName" autocomplete="off" class="inputCode" style="width: 1220px"></el-input>
+                  <el-form-item prop="courseName">
+                    <el-input v-model="createRuleForm.name" autocomplete="off" class="inputCode"
+                              style="width: 1220px"></el-input>
                   </el-form-item>
                 </div>
-               <div class="item">
-                 <img src="../assets/images/asterisk.png" alt="asterisk" class="asterisk">
-                 <span class="left-word">教学班级</span>
-                 <el-form-item prop="teachingClass">
-                   <el-input v-model="createRuleForm.teachingClass" autocomplete="off" class="inputCode" style="width: 1220px"></el-input>
-                 </el-form-item>
-               </div>
+                <div class="item">
+                  <img src="../assets/images/asterisk.png" alt="asterisk" class="asterisk">
+                  <span class="left-word">教学班级</span>
+                  <el-form-item prop="teachingClass">
+                    <el-input v-model="createRuleForm.clazz" autocomplete="off" class="inputCode"
+                              style="width: 1220px"></el-input>
+                  </el-form-item>
+                </div>
                 <div class="selectTerm">
                   <div>
                     <img src="../assets/images/asterisk.png" alt="asterisk" class="asterisk">
                     <span class="left-word">选择学年 - 学期</span>
                   </div>
-                  <el-select v-model="createRuleForm.yearValue" placeholder="请选择学年" >
+                  <el-select v-model="createRuleForm.year" placeholder="请选择学年">
                     <el-option
                         v-for="item in yearOptions"
                         :key="item.value"
@@ -268,7 +271,7 @@
                         :value="item.value">
                     </el-option>
                   </el-select>
-                  <el-select v-model="createRuleForm.termValue" placeholder="请选择学期">
+                  <el-select v-model="createRuleForm.semester" placeholder="请选择学期">
                     <el-option
                         v-for="item in termOptions"
                         :key="item.value"
@@ -277,65 +280,68 @@
                     </el-option>
                   </el-select>
                 </div>
+                <div class="more-information" @click="information=!information">
+                  <span>更多信息
+                    <i class="el-icon-arrow-down" v-show="!information"></i>
+                    <i class="el-icon-arrow-up" v-show="information"></i>
+                  </span>
+                </div>
+                <div class="information" v-show="information">
+                  <div class="information-box">
+                    <div class="up">
+                      <p class="radio-margin">授课模式</p>
+                      <label>
+                        <input type="radio" name="type" value="0" v-model="createRuleForm.type"
+                               class="radio-left-right-margin">
+                        线上
+                      </label>
+                      <label>
+                        <input type="radio" name="type" value="1" v-model="createRuleForm.type"
+                               class="radio-left-right-margin">
+                        线下
+                      </label>
+                      <label>
+                        <input type="radio" name="type" value="2" v-model="createRuleForm.type"
+                               class="radio-left-right-margin">
+                        混合
+                      </label>
+                      <p class="time-margin">学时数</p>
+                      <input type="text" placeholder="请输入学时" class="time-margin1">
+                    </div>
+                    <div class="center">
+                      <p>课程介绍</p>
+                      <!--            用VueEditor-->
+                      <VueEditor/>
+                      <div class="place">
+                        <p>授课地点</p>
+                        <input type="text" class="place-setting">
+                      </div>
+                    </div>
+                    <div class="footer">
+                      <div class="about-institution">
+                        <p class="about-institution-word">机构相关</p>
+                        <el-switch v-model="value1" active-text="对机构后台可见"></el-switch>
+                      </div>
+                      <p class="switch-explain">开启后，机构后台管理员可以看见该教师在线上开设的课程及教学情况</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="bottom">
+                  <hr>
+                  <div class="bottom-content">
+                    <span class="mbz"><i class="el-icon-plus"></i> 导入mbz格式课程包</span>
+                    <div class="button-box">
+                      <el-button class="cancel" @click="createClassButton=false">取消</el-button>
+                      <el-button type="primary" id="sure" @click="submitForm">确认</el-button>
+                    </div>
+                  </div>
+                </div>
               </el-form>
-
             </el-tab-pane>
             <el-tab-pane label="报名设置" name="registrationSettings"></el-tab-pane>
           </el-tabs>
         </div>
-        <div class="more-information" @click="information=!information">
-          <span>更多信息
-            <i class="el-icon-arrow-down" v-show="!information"></i>
-            <i class="el-icon-arrow-up" v-show="information"></i>
-          </span>
-        </div>
-        <div class="information" v-show="information">
-          <div class="information-box">
-            <div class="up">
-              <p class="radio-margin">授课模式</p>
-              <label>
-                <input type="radio" name="type" value="线上" v-model="selectedType" class="radio-left-right-margin">
-                线上
-              </label>
-              <label>
-                <input type="radio" name="type" value="线下" v-model="selectedType" class="radio-left-right-margin">
-                线下
-              </label>
-              <label>
-                <input type="radio" name="type" value="混合" v-model="selectedType" class="radio-left-right-margin">
-                混合
-              </label>
-              <p class="time-margin">学时数</p>
-              <input type="text" placeholder="请输入学时" class="time-margin1">
-            </div>
-            <div class="center">
-              <p>课程介绍</p>
-<!--            用VueEditor-->
-                <VueEditor />
-              <div class="place">
-                <p>授课地点</p>
-                <input type="text" class="place-setting">
-              </div>
-            </div>
-            <div class="footer">
-              <div class="about-institution">
-                <p class="about-institution-word">机构相关</p>
-                <el-switch v-model="value1" active-text="对机构后台可见"></el-switch>
-              </div>
-              <p class="switch-explain">开启后，机构后台管理员可以看见该教师在线上开设的课程及教学情况</p>
-            </div>
-          </div>
-        </div>
-        <div class="bottom">
-          <hr>
-          <div class="bottom-content">
-            <span class="mbz"><i class="el-icon-plus"></i> 导入mbz格式课程包</span>
-            <div class="button-box">
-              <el-button class="cancel" @click="createClassButton=false">取消</el-button>
-              <el-button type="primary" id="sure" @click="submitForm">确认</el-button>
-            </div>
-          </div>
-        </div>
+
     </div>
   </div>
 </div>
@@ -359,8 +365,27 @@ export default {
       }
       else callback()
     }
+
+    let checkCourseName = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('必填项'));
+      } else if (value.length > 50) {
+        return callback(new Error("长度不超过50"))
+      }
+      else callback()
+    }
+
+    let checkTeachingClass = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('必填项'));
+      } else if (value.length > 30) {
+        return callback(new Error("长度不超过30"))
+      }
+      else callback()
+    }
+
     return {
-      selectedType:'',
+      // selectedType:'',
       teachInput:true,
       value1:false,
       information:false,
@@ -404,40 +429,41 @@ export default {
         ]
       },
       createRuleForm:{
-        courseName: '',
-        teachingClass: '',
-        yearValue: '',
-        termValue: ''
+        name: '',
+        clazz: '',
+        year: '',
+        semester: '',
+        type: ''
       },
       createRules:{
-        courseName:[
+        name:[
+          {validator: checkCourseName,trigger:'blur'}
+        ],
+        clazz:[
+          {validator: checkTeachingClass,trigger:'blur'}
+        ],
+        year:[
           {validator: checkAddCourseCode,trigger:'blur'}
         ],
-        teachingClass:[
-          {validator: checkAddCourseCode,trigger:'blur'}
-        ],
-        yearValue:[
-          {validator: checkAddCourseCode,trigger:'blur'}
-        ],
-        termValue:[
+        semester:[
           {validator: checkAddCourseCode,trigger:'blur'}
         ],
       },
       yearOptions: [{
-        value: '2022-2023',
-        label: '2022-2023'
-      }, {
         value: '2023-2024',
         label: '2023-2024'
       }, {
         value: '2024-2025',
         label: '2024-2025'
       }, {
-        value: '2020-2021',
-        label: '2020-2021'
+        value: '2025-2026',
+        label: '2025-2026'
+      },{
+        value: '2026-2027',
+        label: '2026-2027'
       }, {
-        value: '2021-2022',
-        label: '2021-2022'
+        value: '2027-2028',
+        label: '2027-2028'
       }],
       termOptions: [{
         value: '全年',
@@ -513,20 +539,31 @@ export default {
       let that = this
       this.$refs.createRuleForm.validate((valid) => {
         if (valid) {
-          axios.post("http://localhost:8088/course", qs.stringify({
-            year: that.createRuleForm.yearValue,
-            term: that.createRuleForm.termValue,
-            courseName: that.createRuleForm.courseName,
-            teachObject: that.createRuleForm.teachingClass,
-            token: localStorage.getExpire('token'),
-            addCourseCode: '',
-            teachWay: that.selectedType,
-            numberOfStudents: 0
-          })).then(function (response) {
-            console.log(response.data)
-            if (response.data === '创建成功') {
+          axios.post("http://localhost:8088/course/create",
+              that.createRuleForm,{headers:{Authorization:localStorage.getExpire('token')}}
+          ).then(function (response) {
+            if (response.data === "创建成功") {
+              // axios.post("http://localhost:8088/teacher-course/create",qs.stringify({
+              //       year: that.createRuleForm.yearValue,
+              //       term: that.createRuleForm.termValue,
+              //       courseName: that.createRuleForm.courseName,
+              //       teachingClass: that.createRuleForm.teachingClass,
+              //       token: localStorage.getExpire('token'),
+              //       addCourseCode: '',
+              //       type: that.selectedType,
+              //       count: 0
+              //     })
+              // )
               that.createClassButton = !that.createClassButton
-              that.$message.success("创建成功")
+              that.createRuleForm.name = '';
+              that.createRuleForm.clazz = '';
+              that.createRuleForm.year = '';
+              that.createRuleForm.semester = '';
+              that.createRuleForm.type = '';
+              that.$message({
+                message: '创建成功!',
+                type: 'success'
+              });
             }
           })
         } else {
@@ -1143,7 +1180,8 @@ hr{
 
 .el-message{
   background-color: black;
-  top: 850px !important;
+  top: 750px !important;
+  z-index: 200;
 }
 
 .el-message .el-message__content,.el-message .el-icon-success{
