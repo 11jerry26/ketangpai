@@ -217,7 +217,7 @@
         <div class="center">
           <img src="../assets/images/asterisk.png" alt="asterisk" class="asterisk">
           <span class="left-word">加课码</span>
-          <el-form :model="addRuleForm" status-icon :rules="addRules" class="demo-ruleForm">
+          <el-form :model="addRuleForm" status-icon :rules="addRules" ref="addRuleForm" class="demo-ruleForm">
             <el-form-item  prop="addCourseCode">
               <el-input v-model="addRuleForm.addCourseCode" autocomplete="off" placeholder="请输入课程加课码" class="inputCode"></el-input>
             </el-form-item>
@@ -226,7 +226,7 @@
         <hr>
         <div class="bottom">
           <el-button style="margin-left: 700px" @click="addClassButton=false">取消</el-button>
-          <el-button type="primary">确认</el-button>
+          <el-button type="primary" @click="joinClass">确认</el-button>
         </div>
       </div>
 
@@ -362,6 +362,8 @@ export default {
     let checkAddCourseCode = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('必填项'));
+      } else if (value.length !== 6) {
+        return callback(new Error('加课码为六位'));
       }
       else callback()
     }
@@ -566,6 +568,33 @@ export default {
               });
             }
           })
+        } else {
+          console.log('error submit')
+          return false
+        }
+      })
+    },
+    joinClass() {
+      let that = this;
+      this.$refs.addRuleForm.validate((valid) => {
+        if (valid) {
+          axios.post("http://localhost:8088/course/join",qs.stringify({
+            token: localStorage.getExpire('token'),
+            code: that.addRuleForm.addCourseCode
+          }))
+              .then(function (response) {
+                if (response.data === "加入成功") {
+                  that.addClassButton = !that.addClassButton;
+                  that.addRuleForm.addCourseCode = '';
+                  that.$message.success("加入成功!");
+                } else if (response.data === "输入的加课码不存在") {
+                  that.addRuleForm.addCourseCode = '';
+                  that.$message.error("输入的加课码不存在!");
+                } else {
+                  that.addRuleForm.addCourseCode = '';
+                  that.$message.error("已加入该课程!");
+                }
+              })
         } else {
           console.log('error submit')
           return false
