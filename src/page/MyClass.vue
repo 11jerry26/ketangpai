@@ -40,76 +40,76 @@
                 </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <div class="classBox">
-            <div class="classCard">
-              <span class="tag">混合</span>
-              <div class="headerInfo1">
-                <p class="time">2022-2023 第二学期</p>
-                <h3 class="name">面向对象程序设计(java)</h3>
-                <p class="className">122230201-02</p>
-                <div class="qrCode">
-                  <img src="../assets/images/myclass-qrcode.png" alt="myClass-qrcode">
-                  <span class="classCode">加课码:W8ZKCX</span>
-                </div>
-              </div>
+          <div class="classBox" id="classBox">
+            <ClassCard/>
+<!--            <div class="classCard">-->
+<!--              <span class="tag">混合</span>-->
+<!--              <div class="headerInfo1">-->
+<!--                <p class="time">2022-2023 第二学期</p>-->
+<!--                <h3 class="name">面向对象程序设计(java)</h3>-->
+<!--                <p class="className">122230201-02</p>-->
+<!--                <div class="qrCode">-->
+<!--                  <img src="../assets/images/myclass-qrcode.png" alt="myClass-qrcode">-->
+<!--                  <span class="classCode">加课码:W8ZKCX</span>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="userInfo">-->
+<!--                <div class="left">-->
+<!--                  <span class="role">学</span>-->
+<!--                  <span style="cursor: pointer">负责人:刘洁</span>-->
+<!--                </div>-->
+<!--                <div class="right">-->
+<!--                  <div class="setTop">取消置顶</div>-->
+<!--                  <span>...</span>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="classCard">-->
+<!--              <span class="tag2">线下</span>-->
+<!--              <div class="headerInfo2">-->
+<!--                <p class="time">2022-2023 第一学期</p>-->
+<!--                <h3 class="name">人工智能导论</h3>-->
+<!--                <p class="className">软件工程22级(两江人工智能学院)</p>-->
+<!--                <div class="qrCode">-->
+<!--                  <img src="../assets/images/myclass-qrcode.png" alt="myClass-qrcode">-->
+<!--                  <span>加课码:J8VXA6</span>-->
+<!--                </div>-->
+<!--              </div>-->
 
-              <div class="userInfo">
-                <div class="left">
-                  <span class="role">学</span>
-                  <span style="cursor: pointer">负责人:刘洁</span>
-                </div>
-                <div class="right">
-                  <div class="setTop">取消置顶</div>
-                  <span>...</span>
-                </div>
-              </div>
-            </div>
-            <div class="classCard">
-              <span class="tag2">线下</span>
-              <div class="headerInfo2">
-                <p class="time">2022-2023 第一学期</p>
-                <h3 class="name">人工智能导论</h3>
-                <p class="className">软件工程22级(两江人工智能学院)</p>
-                <div class="qrCode">
-                  <img src="../assets/images/myclass-qrcode.png" alt="myClass-qrcode">
-                  <span>加课码:J8VXA6</span>
-                </div>
-              </div>
+<!--              <div class="userInfo">-->
+<!--                <div class="left">-->
+<!--                  <span class="role">学</span>-->
+<!--                  <span style="cursor: pointer">负责人:张金荣</span>-->
+<!--                </div>-->
+<!--                <div class="right">-->
+<!--                  <div class="setTop">取消置顶</div>-->
+<!--                  <span>...</span>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="classCard">-->
+<!--              <span class="tag">混合</span>-->
+<!--              <div class="headerInfo3">-->
+<!--                <p class="time">2022-2023 第一学期</p>-->
+<!--                <h3 class="name">计算机技能训练</h3>-->
+<!--                <p class="className">软件工程专业</p>-->
+<!--                <div class="qrCode">-->
+<!--                  <img src="../assets/images/myclass-qrcode.png" alt="myClass-qrcode">-->
+<!--                  <span>加课码:VY8CKN</span>-->
+<!--                </div>-->
+<!--              </div>-->
 
-              <div class="userInfo">
-                <div class="left">
-                  <span class="role">学</span>
-                  <span style="cursor: pointer">负责人:张金荣</span>
-                </div>
-                <div class="right">
-                  <div class="setTop">取消置顶</div>
-                  <span>...</span>
-                </div>
-              </div>
-            </div>
-            <div class="classCard">
-              <span class="tag">混合</span>
-              <div class="headerInfo3">
-                <p class="time">2022-2023 第一学期</p>
-                <h3 class="name">计算机技能训练</h3>
-                <p class="className">软件工程专业</p>
-                <div class="qrCode">
-                  <img src="../assets/images/myclass-qrcode.png" alt="myClass-qrcode">
-                  <span>加课码:VY8CKN</span>
-                </div>
-              </div>
-
-              <div class="userInfo">
-                <div class="left">
-                  <span class="role">学</span>
-                  <span style="cursor: pointer">负责人:刘洁</span>
-                </div>
-                <div class="right">
-                  <div class="setTop">取消置顶</div>
-                  <span>...</span>
-                </div>
-              </div>
-            </div>
+<!--              <div class="userInfo">-->
+<!--                <div class="left">-->
+<!--                  <span class="role">学</span>-->
+<!--                  <span style="cursor: pointer">负责人:刘洁</span>-->
+<!--                </div>-->
+<!--                <div class="right">-->
+<!--                  <div class="setTop">取消置顶</div>-->
+<!--                  <span>...</span>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
           </div>
         </div>
       </div>
@@ -140,71 +140,6 @@
         <el-collapse-item title="2022-2022 第二学期" name="2"></el-collapse-item>
         <el-collapse-item title="2022-2023 第一学期" name="1"></el-collapse-item>
       </el-collapse>
-      <!--    <div class="classification" :style="divStyle">-->
-      <!--      <div class="title">-->
-      <!--        <h3 class="left" style="cursor: pointer">2022-2023第一学期</h3>-->
-      <!--        <div class="right">-->
-      <!--          <div class="buttonChange">-->
-      <!--            <div class="unfold" @click="unfold1" :style="back1">-->
-      <!--              <i class="el-icon-caret-bottom"></i>-->
-      <!--              <span>展开</span>-->
-      <!--            </div>-->
-      <!--            <div class="fold" @click="fold1" :style="change1">-->
-      <!--              <i class="el-icon-caret-top"></i>-->
-      <!--              <span>收起</span>-->
-      <!--            </div>-->
-      <!--          </div>-->
-      <!--        </div>-->
-      <!--      </div>-->
-      <!--      <div class="classBox" :style="classBoxStyle1">-->
-      <!--        <div class="classCard">-->
-      <!--          <span class="tag2">线下</span>-->
-      <!--          <div class="headerInfo2">-->
-      <!--            <p class="time">2022-2023 第一学期</p>-->
-      <!--            <h3 class="name">人工智能导论</h3>-->
-      <!--            <p class="className">软件工程22级(两江人工智能学院)</p>-->
-      <!--            <div class="qrCode">-->
-      <!--              <img src="../assets/images/myclass-qrcode.png" alt="myClass-qrcode">-->
-      <!--              <span>加课码:J8VXA6</span>-->
-      <!--            </div>-->
-      <!--          </div>-->
-
-      <!--          <div class="userInfo">-->
-      <!--            <div class="left">-->
-      <!--              <span class="role">学</span>-->
-      <!--              <span style="cursor: pointer">负责人:张金荣</span>-->
-      <!--            </div>-->
-      <!--            <div class="right">-->
-      <!--              <div class="setTop">取消置顶</div>-->
-      <!--              <span>...</span>-->
-      <!--            </div>-->
-      <!--          </div>-->
-      <!--        </div>-->
-      <!--        <div class="classCard">-->
-      <!--          <span class="tag">混合</span>-->
-      <!--          <div class="headerInfo3">-->
-      <!--            <p class="time">2022-2023 第一学期</p>-->
-      <!--            <h3 class="name">计算机技能训练</h3>-->
-      <!--            <p class="className">软件工程专业</p>-->
-      <!--            <div class="qrCode">-->
-      <!--              <img src="../assets/images/myclass-qrcode.png" alt="myClass-qrcode">-->
-      <!--              <span>加课码:VY8CKN</span>-->
-      <!--            </div>-->
-      <!--          </div>-->
-
-      <!--          <div class="userInfo">-->
-      <!--            <div class="left">-->
-      <!--              <span class="role">学</span>-->
-      <!--              <span style="cursor: pointer">负责人:刘洁</span>-->
-      <!--            </div>-->
-      <!--            <div class="right">-->
-      <!--              <div class="setTop">取消置顶</div>-->
-      <!--              <span>...</span>-->
-      <!--            </div>-->
-      <!--          </div>-->
-      <!--        </div>-->
-      <!--      </div>-->
-      <!--    </div>-->
 <!--      加入课程-->
       <div class="joinTheClass" v-if="addClassButton">
         <div class="top">
@@ -352,9 +287,11 @@ import SideBar from "@/components/SideBar.vue";
 import MyAvatar from "@/components/MyAvatar.vue";
 import axios from "axios";
 import qs from "qs";
+import ClassCard from "@/components/ClassCard.vue";
 export default {
   name:'MyClass',
   components: {
+    ClassCard,
     MyAvatar,
     SideBar
   },
@@ -387,7 +324,6 @@ export default {
     }
 
     return {
-      // selectedType:'',
       teachInput:true,
       value1:false,
       information:false,
@@ -545,17 +481,6 @@ export default {
               that.createRuleForm,{headers:{Authorization:localStorage.getExpire('token')}}
           ).then(function (response) {
             if (response.data === "创建成功") {
-              // axios.post("http://localhost:8088/teacher-course/create",qs.stringify({
-              //       year: that.createRuleForm.yearValue,
-              //       term: that.createRuleForm.termValue,
-              //       courseName: that.createRuleForm.courseName,
-              //       teachingClass: that.createRuleForm.teachingClass,
-              //       token: localStorage.getExpire('token'),
-              //       addCourseCode: '',
-              //       type: that.selectedType,
-              //       count: 0
-              //     })
-              // )
               that.createClassButton = !that.createClassButton
               that.createRuleForm.name = '';
               that.createRuleForm.clazz = '';
@@ -600,8 +525,24 @@ export default {
           return false
         }
       })
-    }
+    },
+    // loadYourCourse(){
+    //   axios.post("http://localhost:8088/course/select",qs.stringify({
+    //     token: localStorage.getExpire('token'),
+    //   }))
+    //       .then(function (response) {
+    //         let responseMap = response.data;
+    //         let responsiblePersons = responseMap.names;
+    //         let courses = responseMap.courses;
+    //         console.log(responsiblePersons);
+    //         console.log(courses);
+    //       })
+    //       .catch(error => console.error(error));
+    // }
   },
+  // created() {
+  //   this.loadYourCourse();
+  // },
   mounted() {
     this.checkToken()
   }
@@ -736,118 +677,6 @@ export default {
   overflow-y: auto;
 }
 
-.contentBox .classCard{
-  margin: 11px;
-  width: 280px;
-  height: 234px;
-  background: #fff;
-  border: 1px solid #e2e6ed;
-  border-radius: 8px;
-  overflow: hidden;
-  position: relative;
-  z-index: 1;
-}
-
-.contentBox .tag{
-  width: 62px;
-  height: 26px;
-  border-radius: 0 0 0 8px;
-  border-bottom: 2px solid #fff;
-  border-left: 2px solid #fff;
-  line-height: 26px;
-  font-size: 14px;
-  text-align: center;
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: linear-gradient(270deg,#fac966 0,#ffe1ad);
-  color: #6b512e;
-}
-
-.contentBox .tag2{
-  width: 62px;
-  height: 26px;
-  border-radius: 0 0 0 8px;
-  border-bottom: 2px solid #fff;
-  border-left: 2px solid #fff;
-  line-height: 26px;
-  font-size: 14px;
-  text-align: center;
-  position: absolute;
-  top: 0;
-  right: 0;background-color: #00ca90;
-  color: white;
-}
-
-.contentBox .headerInfo1{
-  cursor: pointer;
-  padding: 18px 24px;
-  color: #fff;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 50%;
-  background-color: #3367d5;
-  height: 125px;
-  background-image: url("../assets/images/top_class1.jpg");
-}
-
-.contentBox .headerInfo2{
-  cursor: pointer;
-  padding: 18px 24px;
-  color: #fff;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 50%;
-  background-color: #3367d5;
-  height: 125px;
-  background-image: url("../assets/images/top_class2.jpg");
-}
-
-.contentBox .headerInfo3{
-  cursor: pointer;
-  padding: 18px 24px;
-  color: #fff;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 50%;
-  background-color: #3367d5;
-  height: 125px;
-  background-image: url("../assets/images/top_class3.jpg");
-}
-
-.contentBox .time{
-  opacity: .6;
-  font-size: 12px;
-}
-
-.contentBox .name{
-  margin-top: 3px;
-  font-size: 18px;
-  font-weight: 500;
-  text-align: left;
-  color: #fff;
-  line-height: 32px;
-}
-
-.contentBox .className{
-  font-weight: 500;
-  font-size: 13px;
-  text-align: left;
-  color: #fff;
-  line-height: 24px;
-}
-
-.contentBox .qrCode{
-  margin-top: 18px;
-  display: flex;
-  position: relative;
-  font-size: 12px;
-  font-weight: 500;
-  text-align: left;
-  color: #fff;
-  line-height: 16px;
-}
-
 .contentBox .qrCode img{
   width: 16px;
   height: 16px;
@@ -855,34 +684,7 @@ export default {
   margin-right: 8px;
 }
 
-.contentBox .classCode{
-  font-size: 13px;
-}
-
-.contentBox .userInfo{
-  display: flex;
-  justify-content: space-between;
-  height: 40px;
-  padding: 8px 14px 12px;
-  font-size: 13px;
-  line-height: 16px;
-  margin-top: 25px;
-}
-
 .contentBox .userInfo .left,.contentBox .userInfo .right{
-  display: flex;
-  align-items: center;
-}
-
-.contentBox .role{
-  background-color: #fff;
-  border: 1px solid #4285f4;
-  color: #4285f4;
-  margin-right: 10px;
-}
-
-.contentBox .setTop{
-  cursor: pointer;
   display: flex;
   align-items: center;
 }
