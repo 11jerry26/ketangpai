@@ -13,13 +13,13 @@
       </div>
     </div>
     <div class="card">
-      <div class="cardPic">
-        <h1 class="courseName">足球{{courseDetail.name}}</h1>
-        <h2 class="className">122230202{{courseDetail.className}}</h2>
+      <div class="cardPic" :class="randomBackground(course.code)">
+        <h1 class="courseName">{{course.name}}</h1>
+        <h2 class="className">{{course.clazz}}</h2>
         <div class="codeBox">
           <img class="codeIcon" src="../assets/images/myclass-qrcode.png" alt="myClass-qrcode">
-          <div class="code">加课码:11111{{courseDetail.id}}</div>
-          <div class="text" >已有1{{courseDetail.userNum}}人加入</div>
+          <div class="code">加课码:{{course.code}}</div>
+          <div class="text" >已有{{course.count}}人加入</div>
         </div>
         <el-button class="cardPicBtn" disabled><i class="el-icon-video-play"></i>暂无课堂</el-button>
       </div>
@@ -47,6 +47,7 @@ export default {
 
   data(){
     return{
+      course: null,
       select:'learning',
       lessonId:'',
       courseDetail:''
@@ -58,6 +59,8 @@ export default {
     //   this.courseDetail=res.data
     //   console.log(this.courseDetail)
     // })
+    this.course = JSON.parse(this.$route.query.course);
+    console.log(this.course);
   },
   methods:{
     selector(index){
@@ -70,7 +73,28 @@ export default {
         })
         console.log(this.$route)
       }
-    }
+    },
+    //根据课程码的首个字符设定背景实现随机背景效果
+    randomBackground(code) {
+      let alpha = code[0];
+      if (alpha === "A" || alpha === "B" || alpha === "C") {
+        return 'classBackGround1';
+      } else if (alpha === "A" || alpha === "B" || alpha === "C" || alpha === "D" || alpha === "1") {
+        return 'classBackGround2';
+      } else if (alpha === "E" || alpha === "F" || alpha === "G" || alpha === "H" || alpha === "2") {
+        return 'classBackGround3';
+      } else if (alpha === "I" || alpha === "J" || alpha === "K" || alpha === "L" || alpha === "3") {
+        return 'classBackGround4';
+      } else if (alpha === "M" || alpha === "N" || alpha === "O" || alpha === "P" || alpha === "4") {
+        return 'classBackGround5';
+      } else if (alpha === "Q" || alpha === "R" || alpha === "S" || alpha === "T" || alpha === "5") {
+        return 'classBackGround6';
+      } else if (alpha === "U" || alpha === "V" || alpha === "W" || alpha === "X" || alpha === "6") {
+        return 'classBackGround7';
+      } else {
+        return 'classBackGround7';
+      }
+    },
   }
 
 }
@@ -135,10 +159,40 @@ export default {
 
 .cardPic {
   position: relative;
-  background-image: url('../assets/images/top_class1.jpg');
   height: 200px;
   padding: 24px;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
+
+.cardPic.classBackGround1{
+  background-image: url("../assets/images/top_class1.jpg");
+}
+
+.cardPic.classBackGround2{
+  background-image: url("../assets/images/top_class2.jpg");
+}
+
+.cardPic.classBackGround3{
+  background-image: url("../assets/images/top_class3.jpg");
+}
+
+.cardPic.classBackGround4{
+  background-image: url("../assets/images/top_class4.jpg");
+}
+
+.cardPic.classBackGround5{
+  background-image: url("../assets/images/top_class5.jpg");
+}
+
+.cardPic.classBackGround6{
+  background-image: url("../assets/images/top_class6.jpg");
+}
+
+.cardPic.classBackGround7{
+  background-image: url("../assets/images/top_class7.jpg");
+}
+
 
 .courseName {
   font-size: 36px;
