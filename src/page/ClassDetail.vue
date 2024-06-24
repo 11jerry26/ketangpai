@@ -17,7 +17,7 @@
         <h1 class="courseName">{{course.name}}</h1>
         <h2 class="className">{{course.clazz}}</h2>
         <div class="codeBox">
-          <img class="codeIcon" src="../assets/images/myclass-qrcode.png" alt="myClass-qrcode">
+          <img class="codeIcon" src="../assets/images/afterLogin/codeIcon.svg" alt="myClass-qrcode">
           <div class="code">加课码:{{course.code}}</div>
           <div class="text" >已有{{course.count}}人加入</div>
         </div>
@@ -260,6 +260,7 @@ export default {
   font-size: 20px;
   line-height: 40px;
   border-radius: 10px;
+  cursor: pointer;
 }
 
 .active{

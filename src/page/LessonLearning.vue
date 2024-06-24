@@ -7,18 +7,52 @@
           <span>0个活动</span>
         </div>
       </el-tab-pane>
+      <el-tab-pane label="互动课件" name="presentation">
+        <div class="amountBox">
+          <span>共0个活动</span>
+        </div>
+      </el-tab-pane>
       <el-tab-pane label="作业" name="work">
         <div class="headBox">
           <div class="headText">共有{{workList.length}}项任务</div>
 <!--          <el-button v-if="$store.getters.user.role==='0'" round class="headBtn" @click="addFormVisible=true">＋ 添加作业</el-button>-->
           <el-button round class="headBtn" @click="addFormVisible=true">＋ 添加作业</el-button>
-
         </div>
         <div class="workBox" v-if="workList.length!==0">
           <work-item @child-event="getWorkList" :task="item" v-for="(item,index) in workList" :key="index"></work-item>
         </div>
         <div class="noItemBox" v-if="workList.length===0">
           <img src="@/assets/images/afterLogin/noItem.png" alt="">
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="测试" name="test">
+        <div class="amountBox">
+          <span>共0个活动</span>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="资料" name="information">
+        <div class="amountBox">
+          <span>共0个活动</span>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="腾讯会议" name="tencent">
+        <div class="amountBox">
+          <span>共0个活动</span>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="公告" name="announcement">
+        <div class="amountBox">
+          <span>共0个活动</span>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="话题" name="topic">
+        <div class="amountBox">
+          <span>共0个活动</span>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="互动答题" name="quiz">
+        <div class="amountBox">
+          <span>共0个活动</span>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -203,46 +237,46 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .lessonLearningPage{
-.el-tabs__header{
-  margin: 12px 0;
-.el-tabs__item{
-  font-size: 16px;
-  font-weight: 500;
-}
-.el-tabs__nav-wrap::after{
-  content: none;
-}
-}
+  .el-tabs__header {
+    margin: 15px 0;
+  }
+  .el-tabs__item {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .el-tabs__nav-wrap::after {
+    content: none;
+  }
 
-.navBox{
-.amountBox{
-  padding-top:10px;
-  font-size: 14px;
-}
-  .headBox{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 10px;
-    .headBtn{
-      color: #fff;
-      background-color: #00ca90;
+  .navBox{
+    .amountBox{
+      padding-top:10px;
+      font-size: 16px;
+    }
+    .headBox{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+
+      .headBtn{
+        color: #fff;
+        background-color: #00ca90;
+      }
+    }
+    .workBox{
+      padding-top: 16px;
+      border: 1px solid #e7ebf0;
+      border-radius: 8px;
+      margin-top: 8px;
+      margin-bottom: 10px;
+    }
+    .noItemBox{
+      text-align: center;
+      margin-top: 20px;
     }
   }
-  .workBox{
-    padding-top: 16px;
-    border: 1px solid #e7ebf0;
-    border-radius: 8px;
-    margin-top: 8px;
-    margin-bottom: 10px;
-
-  }
-  .noItemBox{
-    text-align: center;
-    margin-top: 20px;
-  }
-}
 }
 </style>

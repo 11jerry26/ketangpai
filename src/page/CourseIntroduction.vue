@@ -87,7 +87,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .courseIntroductionPage {
   .navBox {
     .el-tabs__header .el-tabs__nav-wrap::after {
