@@ -1,7 +1,7 @@
 <template>
   <div style="display: flex;flex-wrap: wrap">
     <div v-for="(course, index) in courses" :key="index">
-      <div class="classCard">
+      <div class="classCard" @click="toClassDetail(course.code)">
         <span class="tag" :class="tagClass(course)">{{ changeType(course.type) }}</span>
         <div class="headerInfo" :class="randomBackground(course.code)">
           <p class="time">{{ course.year }}   {{course.semester}}</p>
@@ -104,6 +104,9 @@ export default {
             that.yourName = response.data;
           })
           .catch(error => console.error(error));
+    },
+    toClassDetail(code){
+      this.$router.push({ path: '/classDetail', query: { code: code} })
     }
   },
   created() {

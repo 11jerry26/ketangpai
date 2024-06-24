@@ -71,7 +71,7 @@ export default new VueRouter({
             path:'/classDetail',
             component:()=>import("@/page/ClassDetail.vue"),
             children: [{
-                path: 'learning',
+                path: '/',
                 name: 'learning',
                 component: ()=>import("@/page/LessonLearning.vue"),
                 meta:{
