@@ -42,104 +42,37 @@
           </div>
           <div class="classBox" id="classBox">
             <ClassCard/>
-<!--            <div class="classCard">-->
-<!--              <span class="tag">混合</span>-->
-<!--              <div class="headerInfo1">-->
-<!--                <p class="time">2022-2023 第二学期</p>-->
-<!--                <h3 class="name">面向对象程序设计(java)</h3>-->
-<!--                <p class="className">122230201-02</p>-->
-<!--                <div class="qrCode">-->
-<!--                  <img src="../assets/images/myclass-qrcode.png" alt="myClass-qrcode">-->
-<!--                  <span class="classCode">加课码:W8ZKCX</span>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <div class="userInfo">-->
-<!--                <div class="left">-->
-<!--                  <span class="role">学</span>-->
-<!--                  <span style="cursor: pointer">负责人:刘洁</span>-->
-<!--                </div>-->
-<!--                <div class="right">-->
-<!--                  <div class="setTop">取消置顶</div>-->
-<!--                  <span>...</span>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <div class="classCard">-->
-<!--              <span class="tag2">线下</span>-->
-<!--              <div class="headerInfo2">-->
-<!--                <p class="time">2022-2023 第一学期</p>-->
-<!--                <h3 class="name">人工智能导论</h3>-->
-<!--                <p class="className">软件工程22级(两江人工智能学院)</p>-->
-<!--                <div class="qrCode">-->
-<!--                  <img src="../assets/images/myclass-qrcode.png" alt="myClass-qrcode">-->
-<!--                  <span>加课码:J8VXA6</span>-->
-<!--                </div>-->
-<!--              </div>-->
-
-<!--              <div class="userInfo">-->
-<!--                <div class="left">-->
-<!--                  <span class="role">学</span>-->
-<!--                  <span style="cursor: pointer">负责人:张金荣</span>-->
-<!--                </div>-->
-<!--                <div class="right">-->
-<!--                  <div class="setTop">取消置顶</div>-->
-<!--                  <span>...</span>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <div class="classCard">-->
-<!--              <span class="tag">混合</span>-->
-<!--              <div class="headerInfo3">-->
-<!--                <p class="time">2022-2023 第一学期</p>-->
-<!--                <h3 class="name">计算机技能训练</h3>-->
-<!--                <p class="className">软件工程专业</p>-->
-<!--                <div class="qrCode">-->
-<!--                  <img src="../assets/images/myclass-qrcode.png" alt="myClass-qrcode">-->
-<!--                  <span>加课码:VY8CKN</span>-->
-<!--                </div>-->
-<!--              </div>-->
-
-<!--              <div class="userInfo">-->
-<!--                <div class="left">-->
-<!--                  <span class="role">学</span>-->
-<!--                  <span style="cursor: pointer">负责人:刘洁</span>-->
-<!--                </div>-->
-<!--                <div class="right">-->
-<!--                  <div class="setTop">取消置顶</div>-->
-<!--                  <span>...</span>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
           </div>
         </div>
       </div>
-      <div class="middle">
-          <el-tabs v-model="activeName" @tab-click="handleClick" v-if="isStudent">
-            <el-tab-pane label="我学的" name="whatILearn" ></el-tab-pane>
-            <el-tab-pane label="我协助的" name="whatIAssist"></el-tab-pane>
-          </el-tabs>
-          <el-tabs v-model="activeName2" @tab-click="handleClick1" v-if="!isStudent">
-            <el-tab-pane label="我教的" name="whatITeach" >
-              <div class="empty-content">
-                <el-empty description="暂无课程"></el-empty>
-              </div>
-            </el-tab-pane>
-            <el-tab-pane label="我协助的" name="whatIAssist">
-              <div class="empty-content">
-                <el-empty description="暂无课程"></el-empty>
-              </div>
-            </el-tab-pane>
-            <el-tab-pane label="我学的" name="whatILearn"></el-tab-pane>
-          </el-tabs>
-          <el-button style="width: 110px;height: 40px;margin-left: 120px">归档管理</el-button>
-          <el-input v-show="!teachInput" v-model="input" placeholder="搜索我学的课程" suffix-icon="el-icon-search" class="search-course"></el-input>
-          <el-input v-show="teachInput" v-model="input" placeholder="搜索我教的课程" suffix-icon="el-icon-search" class="search-course"></el-input>
-      </div>
-      <el-collapse v-model="term" :style="divStyle">
-        <el-collapse-item title="2023-2024 第一学期" name="3"></el-collapse-item>
-        <el-collapse-item title="2022-2022 第二学期" name="2"></el-collapse-item>
-        <el-collapse-item title="2022-2023 第一学期" name="1"></el-collapse-item>
-      </el-collapse>
+      <CourseClassification/>
+<!--      <div class="middle">-->
+<!--          <el-tabs v-model="activeName" @tab-click="handleClick" v-if="isStudent">-->
+<!--            <el-tab-pane label="我学的" name="whatILearn" ></el-tab-pane>-->
+<!--            <el-tab-pane label="我协助的" name="whatIAssist"></el-tab-pane>-->
+<!--          </el-tabs>-->
+<!--          <el-tabs v-model="activeName2" @tab-click="handleClick1" v-if="!isStudent">-->
+<!--            <el-tab-pane label="我教的" name="whatITeach" >-->
+<!--              <div class="empty-content">-->
+<!--                <el-empty description="暂无课程"></el-empty>-->
+<!--              </div>-->
+<!--            </el-tab-pane>-->
+<!--            <el-tab-pane label="我协助的" name="whatIAssist">-->
+<!--              <div class="empty-content">-->
+<!--                <el-empty description="暂无课程"></el-empty>-->
+<!--              </div>-->
+<!--            </el-tab-pane>-->
+<!--            <el-tab-pane label="我学的" name="whatILearn"></el-tab-pane>-->
+<!--          </el-tabs>-->
+<!--          <el-button style="width: 110px;height: 40px;margin-left: 120px">归档管理</el-button>-->
+<!--          <el-input v-show="!teachInput" v-model="input" placeholder="搜索我学的课程" suffix-icon="el-icon-search" class="search-course"></el-input>-->
+<!--          <el-input v-show="teachInput" v-model="input" placeholder="搜索我教的课程" suffix-icon="el-icon-search" class="search-course"></el-input>-->
+<!--      </div>-->
+<!--      <el-collapse v-model="term" :style="divStyle">-->
+<!--        <el-collapse-item title="2023-2024 第一学期" name="3"></el-collapse-item>-->
+<!--        <el-collapse-item title="2022-2022 第二学期" name="2"></el-collapse-item>-->
+<!--        <el-collapse-item title="2022-2023 第一学期" name="1"></el-collapse-item>-->
+<!--      </el-collapse>-->
 <!--      加入课程-->
       <div class="joinTheClass" v-if="addClassButton">
         <div class="top">
@@ -288,9 +221,11 @@ import MyAvatar from "@/components/MyAvatar.vue";
 import axios from "axios";
 import qs from "qs";
 import ClassCard from "@/components/ClassCard.vue";
+import CourseClassification from "@/components/CourseClassification.vue";
 export default {
   name:'MyClass',
   components: {
+    CourseClassification,
     ClassCard,
     MyAvatar,
     SideBar

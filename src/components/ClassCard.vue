@@ -3,7 +3,7 @@
     <div v-for="(course, index) in courses" :key="index">
       <div class="classCard">
         <span class="tag" :class="tagClass(course)">{{ changeType(course.type) }}</span>
-        <div class="headerInfo" :class="randomBackground()">
+        <div class="headerInfo" :class="randomBackground(course.code)">
           <p class="time">{{ course.year }}   {{course.semester}}</p>
           <h3 class="name">{{ course.name }}</h3>
           <p class="className">{{ course.clazz }}</p>
@@ -74,9 +74,26 @@ export default {
         return 'hybrid';
       }
     },
-    randomBackground() {
-      let randomNumber = Math.floor(Math.random() * 7) + 1;
-      return 'classBackGround' + randomNumber;
+    //根据课程码的首个字符设定背景实现随机背景效果
+    randomBackground(code) {
+      let alpha = code[0];
+      if (alpha === "A" || alpha === "B" || alpha === "C") {
+        return 'classBackGround1';
+      } else if (alpha === "A" || alpha === "B" || alpha === "C" || alpha === "D" || alpha === "1") {
+        return 'classBackGround2';
+      } else if (alpha === "E" || alpha === "F" || alpha === "G" || alpha === "H" || alpha === "2") {
+        return 'classBackGround3';
+      } else if (alpha === "I" || alpha === "J" || alpha === "K" || alpha === "L" || alpha === "3") {
+        return 'classBackGround4';
+      } else if (alpha === "M" || alpha === "N" || alpha === "O" || alpha === "P" || alpha === "4") {
+        return 'classBackGround5';
+      } else if (alpha === "Q" || alpha === "R" || alpha === "S" || alpha === "T" || alpha === "5") {
+        return 'classBackGround6';
+      } else if (alpha === "U" || alpha === "V" || alpha === "W" || alpha === "X" || alpha === "6") {
+        return 'classBackGround7';
+      } else {
+        return 'classBackGround7';
+      }
     },
     loadYourName(){
       let that = this;
