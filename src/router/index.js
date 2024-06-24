@@ -59,7 +59,49 @@ export default new VueRouter({
         },
         {
             path:'/main',
-            component:()=>import("@/page/MyClass.vue")
+            component:()=>import("@/page/MyClass.vue"),
+            // children:[
+            //     {
+            //         path:'classDetail',
+            //         component:()=>import("@/page/ClassDetail.vue")
+            //     }
+            // ]
+        },
+        {
+            path:'/classDetail',
+            component:()=>import("@/page/ClassDetail.vue"),
+            children: [{
+                path: 'learning',
+                name: 'learning',
+                component: ()=>import("@/page/LessonLearning.vue"),
+                meta:{
+                    title:'课程内容'
+                },
+            },
+            {
+                path: 'analyse',
+                name: 'analyse',
+                component: ()=>import("@/page/SemesteAnalysis.vue"),
+                meta:{
+                    title:'课程内容'
+                },
+            },
+            {
+                path: 'scores',
+                name: 'scores',
+                component: ()=>import("@/page/GradeManagement.vue"),
+                meta:{
+                    title:'课程内容'
+                },
+            },
+            {
+                path: 'introduction',
+                name: 'introduction',
+                component: ()=>import("@/page/CourseIntroduction.vue"),
+                meta:{
+                    title:'课程内容'
+                },
+            }]
         }
     ]
 })

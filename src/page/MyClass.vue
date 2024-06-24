@@ -41,7 +41,7 @@
             </el-dropdown>
           </div>
           <div class="classBox">
-            <div class="classCard">
+            <div class="classCard" @click="toClassDetail">
               <span class="tag">混合</span>
               <div class="headerInfo1">
                 <p class="time">2022-2023 第二学期</p>
@@ -534,6 +534,9 @@ export default {
           return false
         }
       })
+    },
+    toClassDetail(){
+      this.$router.push({ path: '/classDetail', query: { code: '2ABOUQ' } })
     }
   },
   mounted() {
