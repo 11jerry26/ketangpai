@@ -351,6 +351,9 @@ export default {
     }
   },
   methods: {
+    getCoursesDataFromChild(data) {
+      this.courses_data = data;
+    },
     handleClick(tab) {
       const tabName = tab.name
       if (tabName === 'whatIAssist'){
@@ -434,6 +437,7 @@ export default {
         }
       })
     },
+    //加入课程
     joinClass() {
       let that = this;
       this.$refs.addRuleForm.validate((valid) => {
@@ -461,23 +465,7 @@ export default {
         }
       })
     },
-    // loadYourCourse(){
-    //   axios.post("http://localhost:8088/course/select",qs.stringify({
-    //     token: localStorage.getExpire('token'),
-    //   }))
-    //       .then(function (response) {
-    //         let responseMap = response.data;
-    //         let responsiblePersons = responseMap.names;
-    //         let courses = responseMap.courses;
-    //         console.log(responsiblePersons);
-    //         console.log(courses);
-    //       })
-    //       .catch(error => console.error(error));
-    // }
   },
-  // created() {
-  //   this.loadYourCourse();
-  // },
   mounted() {
     this.checkToken()
   }
@@ -1013,30 +1001,6 @@ hr{
   font-size: 18px;
 }
 
-.middle .el-tabs__item {
-  padding: 0 20px;
-  height: 40px;
-  box-sizing: border-box;
-  line-height: 40px;
-  display: inline-block;
-  list-style: none;
-  font-size: 18px;
-  font-weight: 500;
-  color: #303133;
-  position: relative;
-}
-
-.middle .el-tabs__nav-wrap::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 260px;
-  height: 2px;
-  background-color: #E4E7ED;
-  z-index: 1;
-}
-
 .topClass .el-dropdown {
   display: inline-block;
   position: relative;
@@ -1065,16 +1029,4 @@ hr{
   transition: all .3s;
   line-height: 40px;
 }
-
-.middle .el-input__inner {
-  padding-right: 30px;
-  border-radius: 20px;
-}
-
-.middle .el-tabs__header {
-  padding: 0;
-  position: relative;
-  margin: 0 500px 15px 0;
-}
-
 </style>

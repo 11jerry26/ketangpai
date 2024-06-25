@@ -1,9 +1,9 @@
 <template>
   <div style="display: flex;flex-wrap: wrap">
     <div v-for="(course, index) in courses" :key="index">
-      <div class="classCard" @click="toClassDetail(course)">
+      <div class="classCard">
         <span class="tag" :class="tagClass(course)">{{ changeType(course.type) }}</span>
-        <div class="headerInfo" :class="randomBackground(course.code)">
+        <div class="headerInfo" :class="randomBackground(course.code)" @click="toClassDetail(course)">
           <p class="time">{{ course.year }}   {{course.semester}}</p>
           <h3 class="name">{{ course.name }}</h3>
           <p class="className">{{ course.clazz }}</p>
@@ -19,7 +19,7 @@
             <span style="cursor: pointer">负责人:{{ responsiblePersons[index] }}</span>
           </div>
           <div class="right">
-            <div class="setTop">取消置顶</div>
+            <div class="setTop" @click="updateTopping(course)">取消置顶</div>
             <span>...</span>
           </div>
         </div>
@@ -42,17 +42,15 @@ export default {
     }
   },
   methods:{
-    loadYourCourse(){
+    loadYourToppedCourse(){
       let that = this;
-      axios.post("http://localhost:8088/course/select",qs.stringify({
+      axios.post("http://localhost:8088/course/selectTop",qs.stringify({
         token: localStorage.getExpire('token'),
       }))
           .then(function (response) {
             let responseMap = response.data;
             that.responsiblePersons = responseMap.names;
             that.courses = responseMap.courses;
-            console.log(that.responsiblePersons);
-            console.log(that.courses);
           })
           .catch(error => console.error(error));
     },
@@ -108,16 +106,27 @@ export default {
     toClassDetail(course){
       console.log(course)
       this.$router.push({ path: '/classDetail', query: { course: JSON.stringify(course)} })
+    },
+    updateTopping(course) {
+      axios.post("http://localhost:8088/course/update",
+          course,{headers:{Authorization:this.yourName}}
+      )
+          .then(function (response){
+            if (response.data === 0) {
+              console.log("失败")
+            }
+          })
+          .catch(error => console.error(error))
     }
   },
   created() {
-    this.loadYourCourse();
+    this.loadYourToppedCourse();
     this.loadYourName();
   }
 }
 </script>
 
-<style scoped>
+<style>
 .classCard{
   margin: 11px;
   width: 264px;
