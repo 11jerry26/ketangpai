@@ -11,11 +11,11 @@
                       <span>我的课堂</span>
                       <div class="line"></div>
           </div>
-          <div v-if="!isShow">
+          <div v-if="!isStudent">
             <el-tabs v-model="activeName1" @tab-click="handleClick">
               <el-tab-pane label="我的课堂" name="first"></el-tab-pane>
-              <el-tab-pane label="备课区" name="second"></el-tab-pane>
-              <el-tab-pane label="虚拟教研室" name="third"></el-tab-pane>
+              <el-tab-pane label="备课区" name="second" ></el-tab-pane>
+              <el-tab-pane label="虚拟教研室" name="third" ></el-tab-pane>
             </el-tabs>
           </div>
         </div>
@@ -45,34 +45,8 @@
           </div>
         </div>
       </div>
-      <CourseClassification/>
-<!--      <div class="middle">-->
-<!--          <el-tabs v-model="activeName" @tab-click="handleClick" v-if="isStudent">-->
-<!--            <el-tab-pane label="我学的" name="whatILearn" ></el-tab-pane>-->
-<!--            <el-tab-pane label="我协助的" name="whatIAssist"></el-tab-pane>-->
-<!--          </el-tabs>-->
-<!--          <el-tabs v-model="activeName2" @tab-click="handleClick1" v-if="!isStudent">-->
-<!--            <el-tab-pane label="我教的" name="whatITeach" >-->
-<!--              <div class="empty-content">-->
-<!--                <el-empty description="暂无课程"></el-empty>-->
-<!--              </div>-->
-<!--            </el-tab-pane>-->
-<!--            <el-tab-pane label="我协助的" name="whatIAssist">-->
-<!--              <div class="empty-content">-->
-<!--                <el-empty description="暂无课程"></el-empty>-->
-<!--              </div>-->
-<!--            </el-tab-pane>-->
-<!--            <el-tab-pane label="我学的" name="whatILearn"></el-tab-pane>-->
-<!--          </el-tabs>-->
-<!--          <el-button style="width: 110px;height: 40px;margin-left: 120px">归档管理</el-button>-->
-<!--          <el-input v-show="!teachInput" v-model="input" placeholder="搜索我学的课程" suffix-icon="el-icon-search" class="search-course"></el-input>-->
-<!--          <el-input v-show="teachInput" v-model="input" placeholder="搜索我教的课程" suffix-icon="el-icon-search" class="search-course"></el-input>-->
-<!--      </div>-->
-<!--      <el-collapse v-model="term" :style="divStyle">-->
-<!--        <el-collapse-item title="2023-2024 第一学期" name="3"></el-collapse-item>-->
-<!--        <el-collapse-item title="2022-2022 第二学期" name="2"></el-collapse-item>-->
-<!--        <el-collapse-item title="2022-2023 第一学期" name="1"></el-collapse-item>-->
-<!--      </el-collapse>-->
+      <CourseClassification :isStu="isStudent"></CourseClassification>
+
 <!--      加入课程-->
       <div class="joinTheClass" v-if="addClassButton">
         <div class="top">
@@ -259,6 +233,7 @@ export default {
     }
 
     return {
+      role: 0,
       teachInput:true,
       value1:false,
       information:false,
@@ -266,7 +241,6 @@ export default {
       addClassButton:false,
       createClassButton:false,
       term: '3',
-      isShow: false,
       activeName: 'whatILearn',
       activeName1:'first',
       activeName2:'whatITeach',
@@ -351,9 +325,6 @@ export default {
     }
   },
   methods: {
-    getCoursesDataFromChild(data) {
-      this.courses_data = data;
-    },
     handleClick(tab) {
       const tabName = tab.name
       if (tabName === 'whatIAssist'){
@@ -454,6 +425,9 @@ export default {
                 } else if (response.data === "输入的加课码不存在") {
                   that.addRuleForm.addCourseCode = '';
                   that.$message.error("输入的加课码不存在!");
+                } else if (response.data === "这是您创建的课程，无法加入") {
+                  that.addRuleForm.addCourseCode = '';
+                  that.$message.error("这是您创建的课程，无法加入!");
                 } else {
                   that.addRuleForm.addCourseCode = '';
                   that.$message.error("已加入该课程!");
@@ -465,9 +439,23 @@ export default {
         }
       })
     },
+    loadYourRole() {
+      let that = this;
+      axios.post("http://localhost:8088/user/selectRole",qs.stringify({
+        token: localStorage.getExpire('token'),
+      }))
+          .then(function (response) {
+            that.role = response.data;
+            console.log(that.role)
+            that.isStudent = that.role === 0;
+            console.log(that.isStudent)
+          })
+          .catch(error => console.error(error));
+    }
   },
   mounted() {
     this.checkToken()
+    this.loadYourRole()
   }
 }
 </script>

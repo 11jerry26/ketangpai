@@ -104,17 +104,15 @@ export default {
           .catch(error => console.error(error));
     },
     toClassDetail(course){
-      console.log(course)
       this.$router.push({ path: '/classDetail', query: { course: JSON.stringify(course)} })
     },
     updateTopping(course) {
-      axios.post("http://localhost:8088/course/update",
-          course,{headers:{Authorization:this.yourName}}
-      )
+      const formData = new FormData();
+      formData.append('course', JSON.stringify(course));
+      formData.append('name', this.yourName);
+      axios.post("http://localhost:8088/course/update", formData)
           .then(function (response){
-            if (response.data === 0) {
-              console.log("失败")
-            }
+            location.reload();
           })
           .catch(error => console.error(error))
     }
