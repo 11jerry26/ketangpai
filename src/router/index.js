@@ -73,7 +73,7 @@ export default new VueRouter({
             children: [{
                 path: '/',
                 name: 'learning',
-                component: ()=>import("@/page/LessonLearning.vue"),
+                component: ()=>import("@/page/CourseLearning.vue"),
                 meta:{
                     title:'课程内容'
                 },
@@ -81,7 +81,7 @@ export default new VueRouter({
             {
                 path: 'analyse',
                 name: 'analyse',
-                component: ()=>import("@/page/SemesteAnalysis.vue"),
+                component: ()=>import("@/page/SemesterAnalysis.vue"),
                 meta:{
                     title:'课程内容'
                 },
@@ -102,6 +102,10 @@ export default new VueRouter({
                     title:'课程内容'
                 },
             }]
+        },
+        {
+            path: '/homeworkDetail',
+            component: ()=>import("@/page/HomeworkDetail.vue"),
         }
     ]
 })

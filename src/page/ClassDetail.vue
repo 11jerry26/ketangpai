@@ -37,7 +37,6 @@
 </template>
 
 <script>
-// import httpPost from "@/utils/axios/Home";
 import MyAvatar from "@/components/MyAvatar.vue";
 
 export default {
@@ -49,7 +48,7 @@ export default {
     return{
       course: null,
       select:'learning',
-      lessonId:'',
+      code:'',
       courseDetail:''
     }
   },
@@ -62,9 +61,9 @@ export default {
       if (this.$route.name !== index){
         this.select = index
         this.$router.push({name: index,
-          // query: {
-          //   lessonId: this.lessonId,
-          // }
+          query: {
+            course: JSON.stringify(this.course)
+          }
         })
         console.log(this.$route)
       }
@@ -95,14 +94,7 @@ export default {
 }
 </script>
 
-<style scoped>
-.courseDetailPage {
-  text-align: left;
-  margin: 0 auto;
-  max-width: 1320px;
-  background-color: #fff;
-}
-
+<style>
 .head{
   position: relative;
   display: flex;
@@ -143,6 +135,19 @@ export default {
   position: absolute;
   left: 7%;
   color: #4285f4;
+}
+
+.el-breadcrumb__inner.is-link {
+  font-weight: normal;
+}
+</style>
+
+<style scoped>
+.courseDetailPage {
+  text-align: left;
+  margin: 0 auto;
+  max-width: 1320px;
+  background-color: #fff;
 }
 
 .card {

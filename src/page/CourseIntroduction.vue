@@ -13,7 +13,7 @@
                   课程名称
                 </div>
                 <div class="itemValue">
-                  {{courseDetail.name}}
+                  {{course.name}}
                 </div>
               </div>
               <div class="itemBox">
@@ -21,7 +21,7 @@
                   教学班级
                 </div>
                 <div class="itemValue">
-                  {{courseDetail.className}}
+                  {{course.clazz}}
                 </div>
               </div>
               <div class="itemBox">
@@ -29,31 +29,7 @@
                   学年-学期
                 </div>
                 <div class="itemValue">
-                  {{courseDetail.academicYear}}{{courseDetail.semester}}
-                </div>
-              </div>
-              <div class="itemBox">
-                <div class="itemKey">
-                  学时数
-                </div>
-                <div class="itemValue">
-                  {{courseDetail.classHour}}
-                </div>
-              </div>
-              <div class="itemBox">
-                <div class="itemKey">
-                  授课地点
-                </div>
-                <div class="itemValue">
-                  {{courseDetail.venue}}
-                </div>
-              </div>
-              <div class="itemBox">
-                <div class="itemKey">
-                  课程介绍
-                </div>
-                <div class="itemValue">
-                  {{courseDetail.classIntroduction}}
+                  {{course.year}} {{course.semester}}
                 </div>
               </div>
             </div>
@@ -66,23 +42,16 @@
 </template>
 
 <script>
-// import httpPost from "@/utils/axios/Home";
-
 export default {
   name: "CourseIntroduction",
   data() {
     return {
-      lessonId:'',
-      activeName: 'first',
-      courseDetail:''
+      course: null,
+      activeName: 'first'
     }
   },
   mounted() {
-    this.lessonId = this.$route.query.lessonId;
-    // httpPost({id:this.lessonId}, '/getLessonDetail', 'POST').then(res=>{
-    //   this.courseDetail=res.data
-    //   console.log(this.courseDetail)
-    // })
+    this.course = JSON.parse(this.$route.query.course);
   }
 }
 </script>

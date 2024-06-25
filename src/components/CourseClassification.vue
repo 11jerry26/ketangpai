@@ -56,14 +56,14 @@
   <el-collapse v-model="term" :style="teaDivStyle">
     <el-collapse-item v-for="(group,index) in groupedTeachCourses" :key="index" :title="group[0]" :name="index">
       <div v-for="course in group[1]" :key="course.code">
-        <div class="classCard" @click="toClassDetail(course)">
+        <div class="classCard">
           <span class="tag" :class="tagClass(course)">{{ changeType(course.type) }}</span>
-          <div class="headerInfo" :class="randomBackground(course.code)">
+          <div class="headerInfo" :class="randomBackground(course.code)" @click="toClassDetail(course)">
             <p class="time">{{ course.year }}   {{course.semester}}</p>
             <h3 class="name">{{ course.name }}</h3>
             <p class="className">{{ course.clazz }}</p>
             <div class="qrCode">
-              <img src="../assets/images/myclass-qrcode.png" alt="myClass-qrcode">
+              <img src="../assets/images/afterLogin/codeIcon.svg" alt="myClass-qrcode">
               <span class="classCode">加课码:{{ course.code }}</span>
             </div>
           </div>
@@ -120,7 +120,7 @@ export default {
         result[key].push(course);
         return result;
       }, {});
-      const semesterToNumber = {'第一学期':1,'第二学期':2,'全年':3}
+      // const semesterToNumber = {'第一学期':1,'第二学期':2,'全年':3}
       return Object.entries(grouped).sort((a, b) => {
         const [yearA, semesterA] = a[0].split(' ');
         const [yearB, semesterB] = b[0].split(' ');
@@ -142,7 +142,7 @@ export default {
         result[key].push(course);
         return result;
       }, {});
-      const semesterToNumber = {'第一学期':1,'第二学期':2,'全年':3}
+      // const semesterToNumber = {'第一学期':1,'第二学期':2,'全年':3}
       return Object.entries(grouped).sort((a, b) => {
         const [yearA, semesterA] = a[0].split(' ');
         const [yearB, semesterB] = b[0].split(' ');
