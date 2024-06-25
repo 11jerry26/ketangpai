@@ -54,11 +54,6 @@ export default {
     }
   },
   mounted() {
-    // this.lessonId = this.$route.query.lessonId;
-    // httpPost({id:this.lessonId}, '/getLessonDetail', 'POST').then(res=>{
-    //   this.courseDetail=res.data
-    //   console.log(this.courseDetail)
-    // })
     this.course = JSON.parse(this.$route.query.course);
     console.log(this.course);
   },
