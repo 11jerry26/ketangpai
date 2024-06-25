@@ -1,11 +1,11 @@
 <template>
 <div>
   <div class="middle">
-    <el-tabs v-model="activeName" @tab-click="handleClick" v-if="isStudent">
+    <el-tabs v-model="activeName" @tab-click="handleClick" v-if="isStu">
       <el-tab-pane label="我学的" name="whatILearn" ></el-tab-pane>
       <el-tab-pane label="我协助的" name="whatIAssist"></el-tab-pane>
     </el-tabs>
-    <el-tabs v-model="activeName2" @tab-click="handleClick1" v-if="!isStudent">
+    <el-tabs v-model="activeName2" @tab-click="handleClick1" v-if="!isStu">
       <el-tab-pane label="我教的" name="whatITeach" >
         <div class="empty-content" v-if="teachCourses.length === 0">
           <el-empty description="暂无课程"></el-empty>
@@ -29,9 +29,9 @@
   <el-collapse v-model="term" :style="stuDivStyle">
     <el-collapse-item v-for="(group,index) in groupedStudyCourses" :key="index" :title="group[0]" :name="index">
       <div v-for="course in group[1]" :key="course.code">
-        <div class="classCard" @click="toClassDetail(course)">
+        <div class="classCard">
           <span class="tag" :class="tagClass(course)">{{ changeType(course.type) }}</span>
-          <div class="headerInfo" :class="randomBackground(course.code)">
+          <div class="headerInfo" :class="randomBackground(course.code)"  @click="toClassDetail(course)">
             <p class="time">{{ course.year }}   {{course.semester}}</p>
             <h3 class="name">{{ course.name }}</h3>
             <p class="className">{{ course.clazz }}</p>
@@ -45,7 +45,8 @@
               <span style="cursor: pointer">负责人:{{ responsiblePersons[courses.indexOf(course)] }}</span>
             </div>
             <div class="right">
-              <div class="setTop">取消置顶</div>
+              <div class="setTop" @click="updateTopping(course)" v-if="isTops[courses.indexOf(course)] === 1">取消置顶</div>
+              <div class="setTop" @click="updateTopping(course)" v-if="isTops[courses.indexOf(course)] === 0">置顶</div>
               <span>...</span>
             </div>
           </div>
@@ -58,7 +59,7 @@
       <div v-for="course in group[1]" :key="course.code">
         <div class="classCard">
           <span class="tag" :class="tagClass(course)">{{ changeType(course.type) }}</span>
-          <div class="headerInfo" :class="randomBackground(course.code)" @click="toClassDetail(course)">
+          <div class="headerInfo" :class="randomBackground(course.code)"  @click="toClassDetail(course)">
             <p class="time">{{ course.year }}   {{course.semester}}</p>
             <h3 class="name">{{ course.name }}</h3>
             <p class="className">{{ course.clazz }}</p>
@@ -72,7 +73,8 @@
               <span style="cursor: pointer">负责人:{{ responsiblePersons[courses.indexOf(course)] }}</span>
             </div>
             <div class="right">
-              <div class="setTop">取消置顶</div>
+              <div class="setTop" @click="updateTopping(course)" v-if="isTops[courses.indexOf(course)] === 1">取消置顶</div>
+              <div class="setTop" @click="updateTopping(course)" v-if="isTops[courses.indexOf(course)] === 0">置顶</div>
               <span>...</span>
             </div>
           </div>
@@ -89,28 +91,32 @@ import qs from "qs";
 
 export default {
   name: 'CourseClassification',
+  props: {
+    isStu:Boolean
+  },
   data() {
     return {
       activeName: 'whatILearn',
       activeName2:'whatITeach',
-      isStudent:false,
       teachInput:true,
       input:'',
       term: '3',
-      teaDivStyle:{
-        display:'block'
-      },
-      stuDivStyle:{
-        display: 'none'
-      },
       yourName:'',
       courses:[],
       responsiblePersons:[],
+      isTops:[],
       teachCourses:[],
-      studyCourses:[]
+      studyCourses:[],
+      teaDivStyle:{
+        display: 'block'
+      },
+      stuDivStyle:{
+        display: 'none'
+      }
     }
   },
   computed: {
+
     groupedStudyCourses() {
       const grouped = this.studyCourses.reduce((result, course) => {
         const key = `${course.year}  ${course.semester}`;
@@ -214,6 +220,7 @@ export default {
             let responseMap = response.data;
             that.responsiblePersons = responseMap.names;
             that.courses = responseMap.courses;
+            that.isTops = responseMap.isTops;
             for (let i = 0; i < that.courses.length; i ++) {
               if (that.yourName === that.responsiblePersons[i]) {
                 that.teachCourses.push(that.courses[i]);
@@ -223,6 +230,18 @@ export default {
             }
           })
           .catch(error => console.error(error));
+    },
+    updateTopping(course) {
+      const formData = new FormData();
+      formData.append('course', JSON.stringify(course));
+      formData.append('name', this.yourName);
+      axios.post("http://localhost:8088/course/update", formData)
+          .then(function (response){
+            if (response.data === 1) {
+              location.reload();
+            }
+          })
+          .catch(error => console.error(error))
     },
     toClassDetail(course){
       console.log(course)

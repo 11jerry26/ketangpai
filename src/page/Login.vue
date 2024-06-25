@@ -32,7 +32,7 @@
               <el-input autocomplete="on" v-model="ruleForm.account" placeholder="请输入邮箱/手机号/账号"></el-input>
             </el-form-item>
             <el-form-item prop="password" >
-              <el-input type="password" v-model="ruleForm.password" autocomplete="off" placeholder="请输入密码" show-password></el-input>
+              <el-input type="password" v-model="ruleForm.password" autocomplete="off" placeholder="请输入密码" show-password  @keydown.enter.native="submitForm()"></el-input>
             </el-form-item>
           </el-form>
 
