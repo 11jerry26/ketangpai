@@ -126,7 +126,6 @@ export default {
         result[key].push(course);
         return result;
       }, {});
-      // const semesterToNumber = {'第一学期':1,'第二学期':2,'全年':3}
       return Object.entries(grouped).sort((a, b) => {
         const [yearA, semesterA] = a[0].split(' ');
         const [yearB, semesterB] = b[0].split(' ');
@@ -148,7 +147,6 @@ export default {
         result[key].push(course);
         return result;
       }, {});
-      // const semesterToNumber = {'第一学期':1,'第二学期':2,'全年':3}
       return Object.entries(grouped).sort((a, b) => {
         const [yearA, semesterA] = a[0].split(' ');
         const [yearB, semesterB] = b[0].split(' ');

@@ -111,7 +111,7 @@ export default {
       formData.append('course', JSON.stringify(course));
       formData.append('name', this.yourName);
       axios.post("http://localhost:8088/course/update", formData)
-          .then(function (response){
+          .then(function (){
             location.reload();
           })
           .catch(error => console.error(error))
