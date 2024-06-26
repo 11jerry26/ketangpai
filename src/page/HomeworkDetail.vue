@@ -41,30 +41,29 @@
               </div>
             </div>
           </div>
-          <div class="annex-box" v-if="homework.file">
-            <div class="title font16 mb24">
-              作业附件
-              <span class="font12 tip">1个</span>
-            </div>
-            <div class="attachment flex-between mb16">
-              <div class="flex-align file">
-                <div class="left">
-                  <img src="@/assets/images/afterLogin/task.png" alt="task">
+<!--          <div class="annex-box" v-if="stuHomework.content">-->
+<!--            <div class="title font16 mb24">-->
+<!--              作业附件-->
+<!--              <span class="font12 tip">1个</span>-->
+<!--            </div>-->
+<!--            <div class="attachment flex-between mb16">-->
+<!--              <div class="flex-align file">-->
+<!--                <div class="left">-->
+<!--                  <img src="@/assets/images/afterLogin/task.png" alt="task">-->
 
-                </div>
-                <div class="right">
-                  <h3>{{homeworkDetail?homeworkDetail.file.split("com/")[1]:''}}</h3>
-                </div>
-              </div>
-              <div class="opt">
-                <div>
-                  <button type="button" class="el-button el-button--text el-button--mini">
-                    <span @click="downLoad(homework.file)">下载</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+<!--                </div>-->
+<!--                <div class="right">-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="opt">-->
+<!--                <div>-->
+<!--                  <button type="button" class="el-button el-button&#45;&#45;text el-button&#45;&#45;mini">-->
+<!--                    <span>下载</span>-->
+<!--                  </button>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
         </el-tab-pane>
         <el-tab-pane label="提交作业" name="second" v-if="isStudent">
           <div class="Caps-student-submit">
@@ -100,12 +99,12 @@
                   提交内容
                 </div>
                 <div>
-                  <button v-if="isStudent" type="button" class="el-button el-button--primary el-button--small">
-                    <span v-if="userTaskDetail.submit==='1'" @click="submit">更新提交</span>
-                    <span v-else @click="submit">提交</span>
+                  <button v-if="score" type="button" class="el-button el-button--small" style="font-size: 30px">
+                    {{score}}分
                   </button>
-                  <button v-if="userTaskDetail.marking==='1'" type="button" class="el-button el-button--primary el-button--small" style="font-size: 30px">
-                    {{userTaskDetail.score}}分
+                  <button v-else type="button" class="el-button el-button--primary el-button--small">
+                    <span v-if="stuHomework.message" @click="update">更新提交</span>
+                    <span v-else @click="submit">提交</span>
                   </button>
                 </div>
               </div>
@@ -115,7 +114,7 @@
                       type="textarea"
                       :autosize="{ minRows: 2, maxRows: 4}"
                       placeholder="请输入答案"
-                      v-model="submitForm.answer">
+                      v-model="submitForm.message">
                   </el-input>
                 </el-form-item>
                 <el-form-item  label="作业附件">
@@ -124,29 +123,28 @@
                   </el-upload>
                 </el-form-item>
               </el-form>
-              <div class="annex-box"  v-if="userTaskDetail.file">
-                <div class="title font16 mb24">
-                  作业附件
-                  <span class="font12 tip">1个</span>
-                </div>
-                <div class="attachment flex-between mb16">
-                  <div class="flex-align file">
-                    <div class="left">
-                      <img src="@/assets/images/afterLogin/task.png" alt="task">
-                    </div>
-                    <div class="right">
-                      <h3>{{userTaskDetail?userTaskDetail.file.split("com/")[1]:''}}</h3>
-                    </div>
-                  </div>
-                  <div class="opt">
-                    <div>
-                      <button type="button" class="el-button el-button--text el-button--mini">
-                        <span @click="downLoad(userTaskDetail.file)">下载</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+<!--              <div class="annex-box">-->
+<!--                <div class="title font16 mb24">-->
+<!--                  作业附件-->
+<!--                  <span class="font12 tip">1个</span>-->
+<!--                </div>-->
+<!--                <div class="attachment flex-between mb16">-->
+<!--                  <div class="flex-align file">-->
+<!--                    <div class="left">-->
+<!--                      <img src="@/assets/images/afterLogin/task.png" alt="task">-->
+<!--                    </div>-->
+<!--                    <div class="right">-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                  <div class="opt">-->
+<!--                    <div>-->
+<!--                      <button type="button" class="el-button el-button&#45;&#45;text el-button&#45;&#45;mini">-->
+<!--                        <span>下载</span>-->
+<!--                      </button>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
             </div>
 
           </div>
@@ -180,14 +178,14 @@
                    <el-input
                        type="textarea"
                        :autosize="{ minRows: 2, maxRows: 4}"
-                        v-model="scope.row.answer">
+                        v-model="scope.row.message">
                    </el-input>
                  </template>
                </el-table-column>
                <el-table-column
                    label="附件"
                    width="200">
-                 <template slot-scope="scope" v-if="scope.row.file!==''">
+                 <template slot-scope="scope" v-if="scope.row.content!==''">
                    <el-link type="primary">下载</el-link>
                  </template>
 
@@ -223,22 +221,26 @@
 
 <script>
 import MyAvatar from "@/components/MyAvatar.vue";
+import axios from "axios";
+import qs from "qs";
 
 export default {
   name: "HomeworkDetail",
   components: {MyAvatar},
   data() {
     return {
+      activeName: 'first',
       isStudent:false,
       course:null,
-      activeName: 'first',
       homework:null,
-      homeworkDetail:'',
+      stuHomework:null,
+      score:null,
       submitForm:{
-        answer:'',
-        file:'',
+        id:'',
+        message:'',
+        content:'',
       },
-      fileList:[],
+      contentList:[],
       data:{
         token:''
       },
@@ -247,7 +249,7 @@ export default {
   },
   computed:{
     publishTime(){
-      const date = new Date(this.homeworkDetail.releaseTime);
+      const date = new Date(this.homework.releaseTime);
       const year = date.getFullYear();
       const month = ("0" + (date.getMonth() + 1)).slice(-2);
       const day = ("0" + date.getDate()).slice(-2);
@@ -258,7 +260,7 @@ export default {
       return formattedDate
     },
     endTime(){
-      const date = new Date(this.homeworkDetail.ddl);
+      const date = new Date(this.homework.ddl);
       const year = date.getFullYear();
       const month = ("0" + (date.getMonth() + 1)).slice(-2);
       const day = ("0" + date.getDate()).slice(-2);
@@ -272,35 +274,93 @@ export default {
     this.isStudent = this.$route.query.isStudent === 'true';
     this.homework = JSON.parse(this.$route.query.homework);
     this.course = JSON.parse(this.$route.query.course);
-    this.getHomeworkDetail()
+    this.submitForm.id = this.homework.id;
+    if (this.isStudent) {
+      this.getStuHomework();
+    } else {
+      this.getStuHomeworkList();
+    }
   },
   methods: {
-    // getTaskUnit(){
-    //   // httpPost({homeworkId:this.homeworkId},'/getTaskUnit','POST').then(res=>{
-    //   //   this.userHomeworkDetail=res.data
-    //   // })
-    // },
-    // handleClick(tab) {
-    //   if (tab.name==='second'){
-    //     this.getTaskUnit()
-    //   }
-    //   else if (tab.name==='third'){
-    //     // httpPost({homeworkId:this.homeworkId},'/getAnswerInfo','POST').then(res=>{
-    //     //   this.tableData=[]
-    //     //   if (res.data){
-    //     //     for (let i = 0; i < res.data.length; i++) {
-    //     //       this.tableData.push({
-    //     //         name: res.data[i].userName,
-    //     //         answer: res.data[i].answer,
-    //     //         file: res.data[i].file,
-    //     //         studentId: res.data[i].studentId,
-    //     //         score:res.data[i].score
-    //     //       })
-    //     //     }
-    //     //   }
-    //     // })
-    //   }
-    // },
+    submit(){
+      const formData = new FormData();
+      formData.append('stuHomework',JSON.stringify(this.submitForm));
+      formData.append('userToken',localStorage.getExpire('token'));
+      axios.post("http://localhost:8088/correct/create", formData)
+          .then((response) => {
+            if (response.data === "作答成功") {
+              this.$message.success("作答成功!");
+            }
+          })
+          .catch((error) => {
+            // 处理错误响应的逻辑
+            console.error("作答失败", error);
+          });
+    },
+    update(){
+      const formData = new FormData();
+      formData.append('stuHomework',JSON.stringify(this.submitForm));
+      formData.append('userToken',localStorage.getExpire('token'));
+      axios.post("http://localhost:8088/correct/update", formData)
+          .then((response) => {
+            if (response.data === "更新作答成功") {
+              this.$message.success("更新作答成功!");
+            }
+          })
+          .catch((error) => {
+            // 处理错误响应的逻辑
+            console.error("更新作答失败", error);
+          });
+    },
+    getStuHomework() {
+      let that = this;
+      axios.post("http://localhost:8088/correct/getStuHomework",qs.stringify({
+        id: this.homework.id,
+        userToken: localStorage.getExpire('token')
+      }))
+          .then(function (response) {
+            const { stuHomework, score } = response.data;
+            that.stuHomework = stuHomework;
+            that.score = score;
+            that.submitForm.message = stuHomework.message;
+          })
+          .catch((error) => {
+            // 处理错误响应的逻辑
+            console.error("请求失败", error);
+          });
+    },
+    getStuHomeworkList(){
+      let that = this;
+      axios.post("http://localhost:8088/correct/getStuHomeworkList",qs.stringify({
+        id: this.homework.id,
+        userToken: localStorage.getExpire('token')
+      }))
+          .then(function (response) {
+            that.tableData=[]
+            if (response.data){
+              for (let i = 0; i < response.data.length; i++) {
+                that.tableData.push({
+                  name: response.data[i].name,
+                  message: response.data[i].message,
+                  content: response.data[i].content,
+                  score:response.data[i].score
+                })
+              }
+            }
+          })
+          .catch((error) => {
+            // 处理错误响应的逻辑
+            console.error("请求失败", error);
+          });
+    },
+    handleClick(tab) {
+      if (tab.name==='second'){
+        this.getStuHomework()
+      }
+      else if (tab.name==='third'){
+        this.getStuHomeworkList()
+      }
+    },
   }
 }
 
@@ -313,7 +373,6 @@ export default {
   height: 1000px;
   margin: auto;
 
-  /*
   .head{
     position: relative;
     display: flex;
@@ -324,7 +383,6 @@ export default {
     box-shadow: 0 0 10px #ccc;
     z-index: 2;
   }
-  */
 
   .head-content{
     position: fixed;
@@ -418,7 +476,9 @@ export default {
     }
   }
   .JobDetailHead {
+    /*
     margin: 60px 0;
+     */
 
     .el-tabs__nav {
       z-index: 0;
