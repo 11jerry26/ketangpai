@@ -54,7 +54,6 @@ export default {
   },
   mounted() {
     this.course = JSON.parse(this.$route.query.course);
-    console.log(this.course);
   },
   methods:{
     selector(index){
@@ -65,7 +64,6 @@ export default {
             course: JSON.stringify(this.course)
           }
         })
-        console.log(this.$route)
       }
     },
     //根据课程码的首个字符设定背景实现随机背景效果

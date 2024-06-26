@@ -18,7 +18,7 @@
           <el-button round class="headBtn" @click="addFormVisible=true" v-if="!isStudent">＋ 添加作业</el-button>
         </div>
         <div class="homeworkBox" v-if="homeworkList.length!==0">
-          <homework-item @child-event="getHomeworkList" :homework="item" :role="isStudent" :code="code" :course="course" v-for="(item,index) in homeworkList" :key="index"></homework-item>
+          <homework-item @child-event="getHomeworkList" :homework="item" :isStudent="isStudent" :code="code" :course="course" v-for="(item,index) in homeworkList" :key="index"></homework-item>
         </div>
         <div class="noItemBox" v-if="homeworkList.length===0">
           <img src="@/assets/images/afterLogin/noItem.png" alt="">
@@ -94,18 +94,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item  label="作业附件">
-          <el-upload
-              class="upload-demo"
-              action="http://upload-cn-east-2.qiniup.com"
-              :data="data"
-              :before-remove="beforeRemove"
-              :on-success="handleSuccess"
-              :before-upload="handleBeforeUpload"
-              :on-preview="handlePreview"
-              multiple
-              :limit="1"
-              :on-exceed="handleExceed"
-              :file-list="fileList">
+          <el-upload>
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
         </el-form-item>
@@ -131,7 +120,6 @@ export default {
   data(){
     return{
       isStudent:false,
-      isStu:false,
       activeName:"homework",
       course: null,
       code: '',
@@ -169,15 +157,10 @@ export default {
     this.loadYourRole();
     this.getHomeworkList()
   },
-  created() {
-    this.getQiniuyunToken();
-  },
+  // created() {
+  //   this.getQiniuyunToken();
+  // },
   methods:{
-    // getHomeworkList(){
-    //   // httpPost({lessonId:this.lessonId},'/taskList','POST').then(res=>{
-    //   //   this.homeworkList = res.data
-    //   // })
-    // },
     getHomeworkList() {
       let that = this;
       axios.post("http://localhost:8088/homework/selectHomework",qs.stringify({
@@ -186,26 +169,6 @@ export default {
           .then(function (response) {
             that.homeworkList = response.data;
           })
-    },
-    handleBeforeUpload(file){
-      this.data.key=file.name
-    },
-    handleSuccess(response) {
-      this.addForm.file=this.$fileBase+response.key
-    },
-    getQiniuyunToken(){
-      // httpPost({}, '/qiniu/token', 'GET').then(res=>{
-      //     this.data.token=res
-      // })
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
-    },
-    handlePreview() {
-      window.open(this.addForm.file);
-    },
-    beforeRemove(file) {
-      return this.$confirm(`确定移除 ${ file.name }？`);
     },
     checkEndDate(rule, value, callback) {
       const startTimeStamp = +new Date(this.addForm.releaseTime); // 将开始时间转换为时间戳
@@ -224,7 +187,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (formName==='addForm'){
-            this.addTask()
+            this.addHomework()
           }
         } else {
           console.log('error submit!!');
@@ -232,7 +195,7 @@ export default {
         }
       });
     },
-    addTask(){
+    addHomework(){
       const formData = new FormData();
       formData.append('homework',JSON.stringify(this.addForm));
       formData.append('code',this.code)

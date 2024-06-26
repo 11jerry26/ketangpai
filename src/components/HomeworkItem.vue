@@ -29,14 +29,17 @@
               个人作业
             </div>
           </div>
-          <div class="itemRight-left-foot" v-if="role">
+          <div class="itemRight-left-foot" v-if="isStudent">
             已提交
           </div>
+          <div class="itemRight-left-foot" v-if="isStudent">
+            未提交
+          </div>
         </div>
-        <div class="itemRight-right" v-if=role>
+        <div class="itemRight-right" v-if=isStudent>
           <el-button class="hasSubmit" type="primary">提交作业</el-button>
         </div>
-        <div class="itemRight-right" v-if=!role>
+        <div class="itemRight-right" v-if=!isStudent>
           <template v-if="homework.isRelease">
             <span class="homeworkDetail">
            <div class="num">{{markingNum||0}}</div>
@@ -52,7 +55,7 @@
          </span>
           </template>
           <template v-else>
-            <div class="moreBox" @click="issuetask" @click.stop>
+            <div class="moreBox" @click="publishHomework" @click.stop>
               <img class="moreIcon" src="@/assets/images/afterLogin/issue.png" alt="" >
               <div>发布</div>
             </div>
@@ -76,7 +79,7 @@
     <el-dialog title="编辑作业" :visible.sync="editFormVisible" @close="closeDialog('editForm')">
       <el-form :model="homework" :rules="editRules" ref="editForm" label-width="100px">
         <el-form-item label="作业标题" prop="title">
-          <el-input v-model="editForm.title" placeholder="作业标题" type="text" maxlength="70" show-word-limit></el-input>
+          <el-input v-model="editForm.title" placeholder="作业标题" type="text" maxlength="70" show-word-limit ></el-input>
         </el-form-item>
         <el-form-item  label="作业描述" prop="description">
           <el-input
@@ -92,8 +95,8 @@
           </el-switch>
         </el-form-item>
 
-        <el-form-item label="发布时间" prop="releaseTime" v-if="editForm.publishNow">
-          <el-date-picker  :disabled="homework.status==='3'"
+        <el-form-item label="发布时间" prop="releaseTime" v-if="editForm.isRelease">
+          <el-date-picker
               v-model="editForm.releaseTime"
               format="yyyy-MM-dd HH:mm:ss"
               value-format="yyyy-MM-dd HH:mm:ss"
@@ -101,7 +104,7 @@
               placeholder="选择日期时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="截至时间" prop="ddl" v-if="editForm.publishNow">
+        <el-form-item label="截至时间" prop="ddl" v-if="editForm.isRelease">
           <el-date-picker
               v-model="editForm.ddl"
               format="yyyy-MM-dd HH:mm:ss"
@@ -111,18 +114,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item  label="作业附件">
-          <el-upload
-              class="upload-demo"
-              action="http://upload-cn-east-2.qiniup.com"
-              :data="data"
-              :before-remove="beforeRemove"
-              :on-success="handleSuccess"
-              :before-upload="handleBeforeUpload"
-              :on-preview="handlePreview"
-              multiple
-              :limit="1"
-              :on-exceed="handleExceed"
-              :file-list="fileList">
+          <el-upload>
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
         </el-form-item>
@@ -132,28 +124,39 @@
             <el-button type="primary" @click="submitForm('editForm')">确 定</el-button>
             </span>
     </el-dialog>
+
+    <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible"
+        width="30%"
+        :before-close="handleClose">
+      <span>确定删除这个课程吗?</span>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="deleteHomework">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-// import httpPost from "@/utils/axios/Home";
-
 import axios from "axios";
 import qs from "qs";
 
 export default {
   name: "HomeworkItem",
-  props:['homework','role','code','course'],
+  props:['homework','isStudent','code','course'],
   data(){
     return{
+      dialogVisible:false,
       markingNum: 0,
       unMarkingNum: 0,
       unSubmitNum: 0,
       editFormVisible:false,
       editForm:{
         status:'',
-        title:'',
-        description: '',
+        title:this.homework.title,
+        description: this.homework.description,
         isRelease: false,
         releaseTime: '',
         ddl: '',
@@ -203,10 +206,17 @@ export default {
     }
   },
   methods:{
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+          .then(() => {
+            done();
+          })
+          .catch(()=> {});
+    },
     goHomeworkDetail(){
       this.$router.push({path:'/homeworkDetail',
         query: {
-          role:this.role,
+          isStudent:this.isStudent,
           homework:JSON.stringify(this.homework),
           course:JSON.stringify(this.course)
         }})
@@ -214,9 +224,9 @@ export default {
     handleCommand(command){
       switch (command){
         case "edit":
-          this.getQiniuyunToken()
           this.editFormVisible = true; break;
-        case "delete":this.deleteTask(); break;
+        case "delete":
+          this.dialogVisible = true; break;
       }
     },
     time(dateString){
@@ -229,26 +239,6 @@ export default {
 
       const formattedDate = `${year}/${month}/${day} ${hour}:${minute}`;
       return formattedDate
-    },
-    handleBeforeUpload(file){
-      this.data.key=file.name
-    },
-    handleSuccess(response) {
-      this.editForm.file=this.$fileBase+response.key
-    },
-    getQiniuyunToken(){
-      // httpPost({}, '/qiniu/token', 'GET').then(res=>{
-      //   this.data.token=res
-      // })
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
-    },
-    beforeRemove(file) {
-      return this.$confirm(`确定移除 ${ file.name }？`);
-    },
-    handlePreview() {
-      window.open(this.homework.file);
     },
     checkEndDate(rule, value, callback) {
       const startTimeStamp = +new Date(this.editForm.releaseTime); // 将开始时间转换为时间戳
@@ -267,7 +257,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (formName==='editForm'){
-            this.updateTask()
+            this.updateHomework()
           }
         } else {
           console.log('error submit!!');
@@ -275,31 +265,38 @@ export default {
         }
       });
     },
-    updateTask(){
-      if (this.editForm.status==='1'){
-        if (this.editForm.publishNow){
-          this.editForm.status=this.editForm.publishNow>new Date()?'3':'2'
-        }
-      }
-      // httpPost(this.editForm,'/updateTask','POST').then(res=>{
-      //   if (res.code===200){
-      //     this.closeDialog()
-      //     this.$emit('child-event')
+    updateHomework(){
+      // if (this.editForm.status==='1'){
+      //   if (this.editForm.publishNow){
+      //     this.editForm.status=this.editForm.publishNow>new Date()?'3':'2'
+      //   }
+      // }
+      // axios.post("http://localhost:8088/homework/update",this.editForm).then(function (response) {
+      //   if (response.data === '修改成功') {
+      //
       //   }
       // })
     },
-    deleteTask(){
-      // httpPost({homeworkId:this.homework.id},'/delTask','POST').then(res=>{
-      //   if (res.code===200){
-      //     console.log(res)
-      //     this.$emit('child-event')
-      //   }
-      // })
+    deleteHomework(){
+      let that = this;
+      this.dialogVisible = false;
+      axios.post("http://localhost:8088/homework/delete",qs.stringify({
+        id:this.homework.id
+      }))
+          .then(function (response) {
+            if (response.data === '删除成功') {
+              that.$message.success("删除成功!")
+              that.$emit('child-event','msg')
+            } else{
+              that.$message.error('删除失败')
+            }
+          })
+          .catch(error => console.error(error))
     },
-    issuetask(){
+
+    publishHomework(){
       this.editForm.releaseTime=null
       this.editForm.ddl=null
-      this.getQiniuyunToken();
       this.editFormVisible = true;
     },
     resetForm(formName) {

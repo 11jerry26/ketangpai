@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="JobDetailHead">
-      <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tabs v-model="activeName" >
         <el-tab-pane label="详情" name="first">
           <div class="JobDetailBody">
             <div class="list-card">
@@ -66,7 +66,7 @@
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="提交作业" name="second" v-if="role">
+        <el-tab-pane label="提交作业" name="second" v-if="isStudent">
           <div class="Caps-student-submit">
             <div class="detail-header">
               <div class="cmp-work-list-card">
@@ -100,7 +100,7 @@
                   提交内容
                 </div>
                 <div>
-                  <button v-if="role" type="button" class="el-button el-button--primary el-button--small">
+                  <button v-if="isStudent" type="button" class="el-button el-button--primary el-button--small">
                     <span v-if="userTaskDetail.submit==='1'" @click="submit">更新提交</span>
                     <span v-else @click="submit">提交</span>
                   </button>
@@ -119,18 +119,7 @@
                   </el-input>
                 </el-form-item>
                 <el-form-item  label="作业附件">
-                  <el-upload
-                      class="upload-demo"
-                      action="http://upload-cn-east-2.qiniup.com"
-                      :data="data"
-                      :before-remove="beforeRemove"
-                      :on-success="handleSuccess"
-                      :before-upload="handleBeforeUpload"
-                      :on-preview="handlePreview"
-                      multiple
-                      :limit="1"
-                      :on-exceed="handleExceed"
-                      :file-list="fileList">
+                  <el-upload>
                     <el-button size="small" type="primary">点击上传</el-button>
                   </el-upload>
                 </el-form-item>
@@ -144,7 +133,6 @@
                   <div class="flex-align file">
                     <div class="left">
                       <img src="@/assets/images/afterLogin/task.png" alt="task">
-
                     </div>
                     <div class="right">
                       <h3>{{userTaskDetail?userTaskDetail.file.split("com/")[1]:''}}</h3>
@@ -163,7 +151,7 @@
 
           </div>
         </el-tab-pane>
-        <el-tab-pane label="批阅" name="third" v-if="!role">
+        <el-tab-pane label="批阅" name="third" v-else>
          <div class="readoverBox">
            <div class="headerBox">
              {{homework.title}}
@@ -200,7 +188,7 @@
                    label="附件"
                    width="200">
                  <template slot-scope="scope" v-if="scope.row.file!==''">
-                   <el-link type="primary" @click="downLoad(scope.row.file)">下载</el-link>
+                   <el-link type="primary">下载</el-link>
                  </template>
 
                </el-table-column>
@@ -214,11 +202,13 @@
                </el-table-column>
 
                <el-table-column label="操作">
-                 <template slot-scope="scope">
+                 <template>
                    <el-button
                        size="mini"
-                       type="danger"
-                       @click="handleEdit(scope.row)">打分</el-button>
+                       type="danger">
+                     打分</el-button>
+
+
                  </template>
                </el-table-column>
              </el-table>
@@ -232,7 +222,6 @@
 </template>
 
 <script>
-// import httpPost from "@/utils/axios/Home";
 import MyAvatar from "@/components/MyAvatar.vue";
 
 export default {
@@ -240,12 +229,11 @@ export default {
   components: {MyAvatar},
   data() {
     return {
-      role:0,
+      isStudent:false,
       course:null,
       activeName: 'first',
       homework:null,
       homeworkDetail:'',
-      userTaskDetail:'',
       submitForm:{
         answer:'',
         file:'',
@@ -281,95 +269,38 @@ export default {
     },
   },
   mounted() {
-    this.role = this.$route.query.role;
+    this.isStudent = this.$route.query.isStudent === 'true';
     this.homework = JSON.parse(this.$route.query.homework);
     this.course = JSON.parse(this.$route.query.course);
-    this.getQiniuyunToken()
-    this.getTaskDetail()
+    this.getHomeworkDetail()
   },
   methods: {
-    handleBeforeUpload(file){
-      this.data.key=file.name
-      console.log(file)
-    },
-    handleSuccess(response) {
-      this.submitForm.file=this.$fileBase+response.key
-    },
-    getQiniuyunToken(){
-      // httpPost({}, '/qiniu/token', 'GET').then(res=>{
-      //   this.data.token=res
-      // })
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
-    },
-    handlePreview() {
-      window.open(this.addForm.file);
-    },
-    beforeRemove(file) {
-      return this.$confirm(`确定移除 ${ file.name }？`);
-    },
-    getTaskUnit(){
-      // httpPost({homeworkId:this.homeworkId},'/getTaskUnit','POST').then(res=>{
-      //   this.userTaskDetail=res.data
-      // })
-    },
-    handleClick(tab) {
-      if (tab.name==='second'){
-        this.getTaskUnit()
-      }
-      else if (tab.name==='third'){
-        // httpPost({homeworkId:this.homeworkId},'/getAnswerInfo','POST').then(res=>{
-        //   this.tableData=[]
-        //   if (res.data){
-        //     for (let i = 0; i < res.data.length; i++) {
-        //       this.tableData.push({
-        //         name: res.data[i].userName,
-        //         answer: res.data[i].answer,
-        //         file: res.data[i].file,
-        //         studentId: res.data[i].studentId,
-        //         score:res.data[i].score
-        //       })
-        //     }
-        //   }
-        // })
-      }
-    },
-    getTaskDetail(){
-      // httpPost({homeworkId:this.homeworkId},'/getTask','POST').then(res=>{
-      //   this.homeworkDetail=res.data[0]
-      // })
-    },
-    downLoad(url){
-      window.open(url);
-    },
-    submit(){
-      this.submitForm.homeworkId=this.homeworkId
-      // httpPost(this.submitForm,'/submitTask','POST').then(res=>{
-      //   console.log(res)
-      //   this.$message({
-      //     message: '提交成功!',
-      //     type: 'success'
-      //   });
-      //   this.getTaskUnit()
-      //
-      // })
-    },
-    // handleEdit(row) {
-      // let param={
-      //   studentId:row.studentId,
-      //   homeworkId:this.homeworkId,
-      //   score:row.score
-      // }
-      // httpPost(param,'/updateScore','POST').then(res=>{
-      //   console.log(res)
-      //   this.$message({
-      //     message: '打分成功!',
-      //     type: 'success'
-      //   });
-      // })
+    // getTaskUnit(){
+    //   // httpPost({homeworkId:this.homeworkId},'/getTaskUnit','POST').then(res=>{
+    //   //   this.userHomeworkDetail=res.data
+    //   // })
     // },
-
+    // handleClick(tab) {
+    //   if (tab.name==='second'){
+    //     this.getTaskUnit()
+    //   }
+    //   else if (tab.name==='third'){
+    //     // httpPost({homeworkId:this.homeworkId},'/getAnswerInfo','POST').then(res=>{
+    //     //   this.tableData=[]
+    //     //   if (res.data){
+    //     //     for (let i = 0; i < res.data.length; i++) {
+    //     //       this.tableData.push({
+    //     //         name: res.data[i].userName,
+    //     //         answer: res.data[i].answer,
+    //     //         file: res.data[i].file,
+    //     //         studentId: res.data[i].studentId,
+    //     //         score:res.data[i].score
+    //     //       })
+    //     //     }
+    //     //   }
+    //     // })
+    //   }
+    // },
   }
 }
 
@@ -382,6 +313,7 @@ export default {
   height: 1000px;
   margin: auto;
 
+  /*
   .head{
     position: relative;
     display: flex;
@@ -392,6 +324,7 @@ export default {
     box-shadow: 0 0 10px #ccc;
     z-index: 2;
   }
+  */
 
   .head-content{
     position: fixed;
@@ -486,6 +419,10 @@ export default {
   }
   .JobDetailHead {
     margin: 60px 0;
+
+    .el-tabs__nav {
+      z-index: 0;
+    }
 
     .el-tabs__nav-wrap::after {
       content: none;
