@@ -1,6 +1,6 @@
 <template>
   <div class="homeworkItemPage">
-    <div class="homeworkItem" @click="goHomeworkDetail">
+    <div class="homeworkItem" @click="goHomeworkDetail()">
       <div class="itemLeft">
         <img class="noItem" src="@/assets/images/afterLogin/work.png" alt="">
         <div class="itemLeft-bottom">
@@ -143,7 +143,7 @@ import qs from "qs";
 
 export default {
   name: "HomeworkItem",
-  props:['homework','role','code'],
+  props:['homework','role','code','course'],
   data(){
     return{
       markingNum: 0,
@@ -206,7 +206,9 @@ export default {
     goHomeworkDetail(){
       this.$router.push({path:'/homeworkDetail',
         query: {
-          homeworkId:this.homework.id
+          role:this.role,
+          homework:JSON.stringify(this.homework),
+          course:JSON.stringify(this.course)
         }})
     },
     handleCommand(command){

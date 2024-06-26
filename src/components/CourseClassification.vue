@@ -36,7 +36,7 @@
             <h3 class="name">{{ course.name }}</h3>
             <p class="className">{{ course.clazz }}</p>
             <div class="qrCode">
-              <img src="../assets/images/myclass-qrcode.png" alt="myClass-qrcode">
+              <img src="../assets/images/afterLogin/codeIcon.svg" alt="myClass-qrcode">
               <span class="classCode">加课码:{{ course.code }}</span>
             </div>
           </div>
@@ -242,7 +242,6 @@ export default {
           .catch(error => console.error(error))
     },
     toClassDetail(course){
-      console.log(course)
       this.$router.push({ path: '/classDetail', query: { course: JSON.stringify(course)} })
     },
     handleClick(tab) {

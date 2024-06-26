@@ -446,9 +446,7 @@ export default {
       }))
           .then(function (response) {
             that.role = response.data;
-            console.log(that.role)
             that.isStudent = that.role === 0;
-            console.log(that.isStudent)
           })
           .catch(error => console.error(error));
     }

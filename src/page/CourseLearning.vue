@@ -18,7 +18,7 @@
           <el-button round class="headBtn" @click="addFormVisible=true" v-if="!isStudent">＋ 添加作业</el-button>
         </div>
         <div class="homeworkBox" v-if="homeworkList.length!==0">
-          <homework-item @child-event="getHomeworkList" :homework="item" :role="isStudent" :code="code" v-for="(item,index) in homeworkList" :key="index"></homework-item>
+          <homework-item @child-event="getHomeworkList" :homework="item" :role="isStudent" :code="code" :course="course" v-for="(item,index) in homeworkList" :key="index"></homework-item>
         </div>
         <div class="noItemBox" v-if="homeworkList.length===0">
           <img src="@/assets/images/afterLogin/noItem.png" alt="">

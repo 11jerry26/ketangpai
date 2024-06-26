@@ -1,12 +1,12 @@
 <template>
-  <div class="WorkDetailPage">
+  <div class="HomeworkDetailPage">
     <div class="head">
       <div class="head-content">
         <i class="el-icon-s-fold"></i>
         <div class="head-middle">
           <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/main' }">我的课堂</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{ path: '/classDetail' }">课程内容</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{path: '/classDetail',query:{course:JSON.stringify(course)}}" >课程内容</el-breadcrumb-item>
             <el-breadcrumb-item>作业详情</el-breadcrumb-item>
           </el-breadcrumb>
         </div>
@@ -25,23 +25,23 @@
                 <header class="flex-align" style="margin-bottom: 0">
                   <div class="h-left">
                     <div class="title flex-align">
-                      <h4 class="common_pointer">{{homeworkDetail.title}}</h4>
+                      <h4 class="common_pointer">{{homework.title}}</h4>
                     </div>
                   </div>
                 </header>
                 <div class="tags">
                   <span class="el-tag">个人作业</span>
-                  <span class="el-tag">提交起止时间： {{releaseTime}}~{{ddl}}</span>
+                  <span class="el-tag">提交起止时间： {{homework.releaseTime}}~{{homework.ddl}}</span>
                   <span class="tag-gray">查重</span>
                   <span class="tag-gray">允许超时提交</span>
                 </div>
                 <div class="homework-description">
-                  {{homeworkDetail.description}}
+                  {{homework.description}}
                 </div>
               </div>
             </div>
           </div>
-          <div class="annex-box" v-if="homeworkDetail.file">
+          <div class="annex-box" v-if="homework.file">
             <div class="title font16 mb24">
               作业附件
               <span class="font12 tip">1个</span>
@@ -59,15 +59,14 @@
               <div class="opt">
                 <div>
                   <button type="button" class="el-button el-button--text el-button--mini">
-                    <span @click="downLoad(homeworkDetail.file)">下载</span>
+                    <span @click="downLoad(homework.file)">下载</span>
                   </button>
                 </div>
               </div>
             </div>
           </div>
         </el-tab-pane>
-<!--        <el-tab-pane label="提交作业" name="second" v-if="$store.getters.user.role==='1'">-->
-        <el-tab-pane label="提交作业" name="second">
+        <el-tab-pane label="提交作业" name="second" v-if="role">
           <div class="Caps-student-submit">
             <div class="detail-header">
               <div class="cmp-work-list-card">
@@ -81,13 +80,13 @@
                   <header class="flex-align" style="margin-bottom: 0">
                     <div class="h-left">
                       <div class="title flex-align">
-                        <h4 class="common_pointer">{{homeworkDetail.title}}</h4>
+                        <h4 class="common_pointer">{{homework.title}}</h4>
                       </div>
                     </div>
                   </header>
                   <div class="tags">
                     <span class="el-tag">个人作业</span>
-                    <span class="el-tag">提交起止时间： {{releaseTime}}~{{ddl}}</span>
+                    <span class="el-tag">提交起止时间： {{homework.releaseTime}}~{{homework.ddl}}</span>
                     <span class="tag-gray">查重</span>
                   </div>
                 </div>
@@ -101,7 +100,7 @@
                   提交内容
                 </div>
                 <div>
-                  <button v-if="userTaskDetail.marking==='0'" type="button" class="el-button el-button--primary el-button--small">
+                  <button v-if="role" type="button" class="el-button el-button--primary el-button--small">
                     <span v-if="userTaskDetail.submit==='1'" @click="submit">更新提交</span>
                     <span v-else @click="submit">提交</span>
                   </button>
@@ -164,14 +163,13 @@
 
           </div>
         </el-tab-pane>
-<!--       <el-tab-pane label="批阅" name="third" v-else>-->
-        <el-tab-pane label="批阅" name="third">
+        <el-tab-pane label="批阅" name="third" v-if="!role">
          <div class="readoverBox">
            <div class="headerBox">
-             {{homeworkDetail.title}}
+             {{homework.title}}
            </div>
            <div class="topBox">
-             <el-tag>截至: {{ddl}}</el-tag>
+             <el-tag>截至: {{homework.ddl}}</el-tag>
              <el-tag type="info">个人作业</el-tag>
              <el-tag type="info">查重</el-tag>
            </div>
@@ -238,12 +236,14 @@
 import MyAvatar from "@/components/MyAvatar.vue";
 
 export default {
-  name: "WorkDetail",
+  name: "HomeworkDetail",
   components: {MyAvatar},
   data() {
     return {
+      role:0,
+      course:null,
       activeName: 'first',
-      homeworkId:'',
+      homework:null,
       homeworkDetail:'',
       userTaskDetail:'',
       submitForm:{
@@ -281,7 +281,9 @@ export default {
     },
   },
   mounted() {
-    this.homeworkId = this.$route.query.homeworkId;
+    this.role = this.$route.query.role;
+    this.homework = JSON.parse(this.$route.query.homework);
+    this.course = JSON.parse(this.$route.query.course);
     this.getQiniuyunToken()
     this.getTaskDetail()
   },
@@ -375,10 +377,56 @@ export default {
 </script>
 
 <style>
-.WorkDetailPage {
+.HomeworkDetailPage {
   width: 1224px;
   height: 1000px;
   margin: auto;
+
+  .head{
+    position: relative;
+    display: flex;
+    height: 64px;
+    width: 100%;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+    box-shadow: 0 0 10px #ccc;
+    z-index: 2;
+  }
+
+  .head-content{
+    position: fixed;
+    background-color: #fff;
+    top: 0;
+    left: 0;
+    height: 64px;
+    width: 100%;
+    padding: 0 28px;
+    min-width: 900px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 0 0 #dfdfdf;
+    z-index: 1;
+  }
+
+  .head span{
+    font-size: 16px;
+  }
+
+  .el-icon-s-fold {
+    font-size: 20px;
+  }
+
+  .head-middle{
+    position: absolute;
+    left: 7%;
+    color: #4285f4;
+  }
+
+  .el-breadcrumb__inner.is-link {
+    font-weight: normal;
+  }
 
   .annex-box {
     margin-top: 20px;
@@ -437,6 +485,8 @@ export default {
     }
   }
   .JobDetailHead {
+    margin: 60px 0;
+
     .el-tabs__nav-wrap::after {
       content: none;
     }
