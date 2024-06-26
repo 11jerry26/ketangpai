@@ -16,10 +16,10 @@
             <div class="itemRight-left-body-left">
               提交截止时间：{{time(homework.ddl)}}
             </div>
-            <div class="el-divider">
+            <div class="el-divider" v-if="isDeadlinePassed">
               |
             </div>
-            <div class="itemRight-left-body-mid">
+            <div class="itemRight-left-body-mid" v-if="isDeadlinePassed">
               已结束
             </div>
             <div class="el-divider">
@@ -29,26 +29,25 @@
               个人作业
             </div>
           </div>
-          <div class="itemRight-left-foot">
+          <div class="itemRight-left-foot" v-if="role">
             已提交
           </div>
         </div>
-        <div class="itemRight-right" v-if="$store.getters.user.role==='1'">
+        <div class="itemRight-right" v-if=role>
           <el-button class="hasSubmit" type="primary">提交作业</el-button>
         </div>
-        <div class="itemRight-right" v-if="$store.getters.user.role==='0'">
+        <div class="itemRight-right" v-if=!role>
           <template v-if="homework.isRelease">
             <span class="homeworkDetail">
-           <div class="num">{{homework.markingNum||0}}</div>
+           <div class="num">{{markingNum||0}}</div>
            <div>已批完</div>
          </span>
             <span class="homeworkDetail">
-           <div class="num">{{homework.unmarkingNum||0}}</div>
+           <div class="num">{{unMarkingNum||0}}</div>
            <div>未批完</div>
          </span>
             <span class="homeworkDetail">
-           <div class="num">{{homework.unsubmitNum||0}}</div>
-
+           <div class="num">{{unSubmitNum||0}}</div>
            <div>未交</div>
          </span>
           </template>
@@ -87,9 +86,9 @@
               v-model="editForm.description">
           </el-input>
         </el-form-item>
-        <el-form-item  label="立即发布" prop="publishNow">
+        <el-form-item  label="立即发布" prop="isRelease">
           <el-switch
-              v-model="editForm.publishNow">
+              v-model="editForm.isRelease">
           </el-switch>
         </el-form-item>
 
@@ -139,11 +138,17 @@
 <script>
 // import httpPost from "@/utils/axios/Home";
 
+import axios from "axios";
+import qs from "qs";
+
 export default {
   name: "HomeworkItem",
-  props:['homework'],
+  props:['homework','role','code'],
   data(){
     return{
+      markingNum: 0,
+      unMarkingNum: 0,
+      unSubmitNum: 0,
       editFormVisible:false,
       editForm:{
         status:'',
@@ -172,7 +177,15 @@ export default {
       },
     }
   },
+  computed: {
+    isDeadlinePassed() {
+      const currentDateTime = +new Date();
+      const deadlineDateTime = +new Date(this.homework.ddl);
+      return currentDateTime > deadlineDateTime;
+    }
+  },
   mounted() {
+    this.getHomeWorkCounts();
     this.editForm.id = this.homework.id
     this.editForm.creatorId = this.homework.creatorId
     this.editForm.unsubmitNum = this.homework.unsubmitNum
@@ -188,7 +201,6 @@ export default {
     if (this.homework.file!==''){
       this.fileList.push({name: this.homework.file.substring(this.homework.file.lastIndexOf('/') + 1), url: this.homework.file})
     }
-    console.log(this.editForm)
   },
   methods:{
     goHomeworkDetail(){
@@ -218,7 +230,6 @@ export default {
     },
     handleBeforeUpload(file){
       this.data.key=file.name
-      console.log(file)
     },
     handleSuccess(response) {
       this.editForm.file=this.$fileBase+response.key
@@ -251,7 +262,6 @@ export default {
       this.editFormVisible = false;
     },
     submitForm(formName) {
-      console.log(this.editForm)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (formName==='editForm'){
@@ -269,7 +279,6 @@ export default {
           this.editForm.status=this.editForm.publishNow>new Date()?'3':'2'
         }
       }
-      console.log(this.editForm)
       // httpPost(this.editForm,'/updateTask','POST').then(res=>{
       //   if (res.code===200){
       //     this.closeDialog()
@@ -294,6 +303,19 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
+    getHomeWorkCounts() {
+      let that = this;
+      axios.post("http://localhost:8088/homework/selectCounts",qs.stringify({
+        homeworkId: this.homework.id,
+        code:this.code
+      }))
+          .then(function (response) {
+            const [markingNum,unMarkingNum,unSubmitNum] = response.data;
+            that.markingNum = markingNum;
+            that.unMarkingNum = unMarkingNum;
+            that.unSubmitNum = unSubmitNum;
+          })
+    }
   }
 }
 </script>

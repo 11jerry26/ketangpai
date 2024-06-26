@@ -20,7 +20,7 @@
           </div>
           <div class="right">
             <div class="setTop" @click="updateTopping(course)">取消置顶</div>
-            <span>...</span>
+            <img class="moreIcon" src="@/assets/images/afterLogin/more.svg" alt="" >
           </div>
         </div>
       </div>

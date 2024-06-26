@@ -47,7 +47,7 @@
             <div class="right">
               <div class="setTop" @click="updateTopping(course)" v-if="isTops[courses.indexOf(course)] === 1">取消置顶</div>
               <div class="setTop" @click="updateTopping(course)" v-if="isTops[courses.indexOf(course)] === 0">置顶</div>
-              <span>...</span>
+              <img class="moreIcon" src="@/assets/images/afterLogin/more.svg" alt="" >
             </div>
           </div>
         </div>
@@ -75,7 +75,7 @@
             <div class="right">
               <div class="setTop" @click="updateTopping(course)" v-if="isTops[courses.indexOf(course)] === 1">取消置顶</div>
               <div class="setTop" @click="updateTopping(course)" v-if="isTops[courses.indexOf(course)] === 0">置顶</div>
-              <span>...</span>
+              <img class="moreIcon" src="@/assets/images/afterLogin/more.svg" alt="" >
             </div>
           </div>
         </div>
@@ -100,7 +100,7 @@ export default {
       activeName2:'whatITeach',
       teachInput:true,
       input:'',
-      term: '3',
+      term: '1',
       yourName:'',
       courses:[],
       responsiblePersons:[],
@@ -333,5 +333,10 @@ export default {
 .el-collapse-item__content{
   display: flex;
   flex-wrap: wrap;
+}
+
+.moreIcon{
+  width: 15px;
+  margin-left: 6px;
 }
 </style>

@@ -15,11 +15,10 @@
       <el-tab-pane label="作业" name="homework">
         <div class="headBox">
           <div class="headText">共有{{homeworkList.length}}个活动</div>
-<!--          <el-button v-if="$store.getters.user.role==='0'" round class="headBtn" @click="addFormVisible=true">＋ 添加作业</el-button>-->
-          <el-button round class="headBtn" @click="addFormVisible=true">＋ 添加作业</el-button>
+          <el-button round class="headBtn" @click="addFormVisible=true" v-if="!isStudent">＋ 添加作业</el-button>
         </div>
         <div class="homeworkBox" v-if="homeworkList.length!==0">
-          <homework-item @child-event="getWorkList" :task="item" v-for="(item,index) in homeworkList" :key="index"></homework-item>
+          <homework-item @child-event="getHomeworkList" :homework="item" :role="isStudent" :code="code" v-for="(item,index) in homeworkList" :key="index"></homework-item>
         </div>
         <div class="noItemBox" v-if="homeworkList.length===0">
           <img src="@/assets/images/afterLogin/noItem.png" alt="">
@@ -123,6 +122,7 @@
 <script>
 import HomeworkItem from "@/components/HomeworkItem.vue";
 import axios from "axios";
+import qs from "qs";
 
 export default {
   name: "CourseLearning",
@@ -130,11 +130,12 @@ export default {
 
   data(){
     return{
+      isStudent:false,
+      isStu:false,
       activeName:"homework",
       course: null,
       code: '',
       addForm: {
-        code: '',
         title: '',
         description: '',
         isRelease: false,
@@ -165,20 +166,29 @@ export default {
   mounted() {
     this.course = JSON.parse(this.$route.query.course);
     this.code = this.course.code;
-    this.getWorkList()
+    this.loadYourRole();
+    this.getHomeworkList()
   },
   created() {
     this.getQiniuyunToken();
   },
   methods:{
-    getWorkList(){
-      // httpPost({lessonId:this.lessonId},'/taskList','POST').then(res=>{
-      //   this.homeworkList = res.data
-      // })
+    // getHomeworkList(){
+    //   // httpPost({lessonId:this.lessonId},'/taskList','POST').then(res=>{
+    //   //   this.homeworkList = res.data
+    //   // })
+    // },
+    getHomeworkList() {
+      let that = this;
+      axios.post("http://localhost:8088/homework/selectHomework",qs.stringify({
+        code:this.code
+      }))
+          .then(function (response) {
+            that.homeworkList = response.data;
+          })
     },
     handleBeforeUpload(file){
       this.data.key=file.name
-      console.log(file)
     },
     handleSuccess(response) {
       this.addForm.file=this.$fileBase+response.key
@@ -223,24 +233,37 @@ export default {
       });
     },
     addTask(){
-      this.addForm.code=this.code;
-      axios.post("http://localhost:8088/homework/create", this.homework, {
-        headers: {
-          Authorization: localStorage.getItem('token')
-        }
-      }).then(function (response) {
-        if (response.data === "创建成功") {
-          this.closeDialog()
-          this.getWorkList()
-        }
-      }).catch(function (error) {
-        // 处理错误响应的逻辑
-        console.error("作业创建失败", error);
-      });
+      const formData = new FormData();
+      formData.append('homework',JSON.stringify(this.addForm));
+      formData.append('code',this.code)
+      formData.append('userToken',localStorage.getExpire('token'))
+      axios.post("http://localhost:8088/homework/create", formData)
+          .then((response) => {
+            if (response.data === "创建成功") {
+              this.closeDialog();
+              this.$message.success("创建成功!");
+              this.getHomeworkList();
+            }
+          })
+          .catch((error) => {
+            // 处理错误响应的逻辑
+            console.error("作业创建失败", error);
+          });
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
+    loadYourRole() {
+      let that = this;
+      axios.post("http://localhost:8088/user/selectRole",qs.stringify({
+        token: localStorage.getExpire('token'),
+      }))
+          .then(function (response) {
+            that.role = response.data;
+            that.isStudent = that.role === 0;
+          })
+          .catch(error => console.error(error));
+    }
   }
 }
 </script>
