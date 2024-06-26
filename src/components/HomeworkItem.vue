@@ -29,10 +29,10 @@
               个人作业
             </div>
           </div>
-          <div class="itemRight-left-foot" v-if="isStudent">
+          <div class="itemRight-left-foot" v-if="isStudent && isCommit > 0">
             已提交
           </div>
-          <div class="itemRight-left-foot" v-if="isStudent">
+          <div class="itemRight-left-foot" v-if="isStudent && isCommit === 0">
             未提交
           </div>
         </div>
@@ -149,6 +149,7 @@ export default {
   data(){
     return{
       dialogVisible:false,
+      isCommit:0,
       markingNum: 0,
       unMarkingNum: 0,
       unSubmitNum: 0,
@@ -182,13 +183,14 @@ export default {
   },
   computed: {
     isDeadlinePassed() {
-      const currentDateTime = +new Date();
-      const deadlineDateTime = +new Date(this.homework.ddl);
+      const currentDateTime = new Date();
+      const deadlineDateTime = new Date(this.homework.ddl);
       return currentDateTime > deadlineDateTime;
     }
   },
   mounted() {
     this.getHomeWorkCounts();
+    this.selectStuHomework();
     this.editForm.id = this.homework.id
     this.editForm.creatorId = this.homework.creatorId
     this.editForm.unsubmitNum = this.homework.unsubmitNum
@@ -266,11 +268,6 @@ export default {
       });
     },
     updateHomework(){
-      // if (this.editForm.status==='1'){
-      //   if (this.editForm.publishNow){
-      //     this.editForm.status=this.editForm.publishNow>new Date()?'3':'2'
-      //   }
-      // }
       let that = this;
       axios.post("http://localhost:8088/homework/update",this.editForm).then(function (response) {
         if (response.data === '修改成功') {
@@ -319,6 +316,15 @@ export default {
             that.markingNum = markingNum;
             that.unMarkingNum = unMarkingNum;
             that.unSubmitNum = unSubmitNum;
+          })
+    },
+    selectStuHomework() {
+      let that = this
+      axios.post("http://localhost:8088/homework/selectStuHomeworkCounts",qs.stringify({
+        homeworkId:this.homework.id
+      }))
+          .then(function (response) {
+            that.isCommit = response.data;
           })
     }
   }
