@@ -77,7 +77,7 @@
       </div>
     </div>
     <el-dialog title="编辑作业" :visible.sync="editFormVisible" @close="closeDialog('editForm')">
-      <el-form :model="homework" :rules="editRules" ref="editForm" label-width="100px">
+      <el-form :model="editForm" :rules="editRules" ref="editForm" label-width="100px">
         <el-form-item label="作业标题" prop="title">
           <el-input v-model="editForm.title" placeholder="作业标题" type="text" maxlength="70" show-word-limit ></el-input>
         </el-form-item>
@@ -271,11 +271,17 @@ export default {
       //     this.editForm.status=this.editForm.publishNow>new Date()?'3':'2'
       //   }
       // }
-      // axios.post("http://localhost:8088/homework/update",this.editForm).then(function (response) {
-      //   if (response.data === '修改成功') {
-      //
-      //   }
-      // })
+      let that = this;
+      axios.post("http://localhost:8088/homework/update",this.editForm).then(function (response) {
+        if (response.data === '修改成功') {
+          that.$message.success("修改成功!")
+          that.editFormVisible = false;
+          that.$emit('child-event','msg');
+        } else {
+          that.$message.error("修改失败!");
+        }
+      })
+          .catch(error => console.error(error))
     },
     deleteHomework(){
       let that = this;
