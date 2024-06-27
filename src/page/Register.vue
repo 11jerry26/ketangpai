@@ -39,10 +39,11 @@
             <el-input v-model="ruleForm.name" placeholder="请输入姓名"></el-input>
           </el-form-item>
           <el-form-item  prop="school">
-            <el-input type="text" v-model="ruleForm.school" autocomplete="off" placeholder="请输入学校/机构"></el-input>
+            <el-input type="text" v-model="ruleForm.school" autocomplete="off" placeholder="请输入学校/机构" @keydown.enter.native="submitForm()"></el-input>
+
           </el-form-item>
           <el-form-item  prop="id" :style="isStu">
-            <el-input type="text" v-model="ruleForm.id" autocomplete="off" placeholder="请输入学号"></el-input>
+            <el-input type="text" v-model="ruleForm.id" autocomplete="off" placeholder="请输入学号" @keydown.enter.native="submitForm()"></el-input>
           </el-form-item>
         </el-form>
         <div class="btn">

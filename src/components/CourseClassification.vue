@@ -3,7 +3,6 @@
   <div class="middle">
     <el-tabs v-model="activeName" @tab-click="handleClick" v-if="isStu">
       <el-tab-pane label="我学的" name="whatILearn" ></el-tab-pane>
-      <el-tab-pane label="我协助的" name="whatIAssist"></el-tab-pane>
     </el-tabs>
     <el-tabs v-model="activeName2" @tab-click="handleClick1" v-if="!isStu">
       <el-tab-pane label="我教的" name="whatITeach" >
@@ -45,8 +44,8 @@
               <span style="cursor: pointer">负责人:{{ responsiblePersons[courses.indexOf(course)] }}</span>
             </div>
             <div class="right">
-              <div class="setTop" @click="updateTopping(course)" v-if="isTops[courses.indexOf(course)] === 1">取消置顶</div>
-              <div class="setTop" @click="updateTopping(course)" v-if="isTops[courses.indexOf(course)] === 0">置顶</div>
+              <div class="setTop" @click="updateTopping(course)" v-if="isTops[courses.indexOf(course)] === 0">取消置顶</div>
+              <div class="setTop" @click="updateTopping(course)" v-if="isTops[courses.indexOf(course)] === 1">置顶</div>
               <img class="moreIcon" src="@/assets/images/afterLogin/more.svg" alt="" >
             </div>
           </div>

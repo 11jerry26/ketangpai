@@ -1,6 +1,6 @@
 <template>
   <div class="homeworkItemPage">
-    <div class="homeworkItem" @click="goHomeworkDetail()">
+    <div class="homeworkItem">
       <div class="itemLeft">
         <img class="noItem" src="@/assets/images/afterLogin/work.png" alt="">
         <div class="itemLeft-bottom">
@@ -29,17 +29,21 @@
               个人作业
             </div>
           </div>
-          <div class="itemRight-left-foot" v-if="isStudent && isCommit > 0">
+          <div class="itemRight-left-foot" v-if="isStudent && isCommit > 0 && score === ''">
             已提交
           </div>
-          <div class="itemRight-left-foot" v-if="isStudent && isCommit === 0">
+          <div class="itemRight-left-foot" v-if="isStudent && isCommit > 0 && score !== ''">
+            已批改  {{score}}分
+          </div>
+          <div class="itemRight-left-foot" v-if="isStudent && isCommit === 0" style="color: orange">
             未提交
           </div>
         </div>
         <div class="itemRight-right" v-if=isStudent>
-          <el-button class="hasSubmit" type="primary">提交作业</el-button>
+          <el-button class="hasSubmit" type="primary"  @click="goHomeworkDetail()" :disabled="isDeadlinePassed" v-if="!isCommit">提交作业</el-button>
+          <el-button class="hasSubmit" type="primary" plain v-if="isCommit && score === ''"  @click="goHomeworkDetail()">已提交</el-button>
         </div>
-        <div class="itemRight-right" v-if=!isStudent>
+        <div class="itemRight-right" v-if=!isStudent @click="goHomeworkDetail()" style="cursor:pointer;">
           <template v-if="homework.isRelease">
             <span class="homeworkDetail">
            <div class="num">{{markingNum||0}}</div>
@@ -130,7 +134,7 @@
         :visible.sync="dialogVisible"
         width="30%"
         :before-close="handleClose">
-      <span>确定删除这个课程吗?</span>
+      <span>确定删除这个作业吗?</span>
       <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
     <el-button type="primary" @click="deleteHomework">确 定</el-button>
@@ -148,6 +152,7 @@ export default {
   props:['homework','isStudent','code','course'],
   data(){
     return{
+      score:0,
       dialogVisible:false,
       isCommit:0,
       markingNum: 0,
@@ -191,21 +196,7 @@ export default {
   mounted() {
     this.getHomeWorkCounts();
     this.selectStuHomework();
-    this.editForm.id = this.homework.id
-    this.editForm.creatorId = this.homework.creatorId
-    this.editForm.unsubmitNum = this.homework.unsubmitNum
-    this.editForm.lessonId = this.homework.lessonId
-    this.editForm.unmarkingNum = this.homework.unmarkingNum
-    this.editForm.publishNow=this.homework.status==='1'
-    this.editForm.status = this.homework.status
-    this.editForm.homeworkName = this.homework.title
-    this.editForm.description = this.homework.description
-    this.editForm.file = this.homework.file
-    this.editForm.releaseTime = new Date(this.homework.releaseTime)
-    this.editForm.ddl = new Date(this.homework.ddl)
-    if (this.homework.file!==''){
-      this.fileList.push({name: this.homework.file.substring(this.homework.file.lastIndexOf('/') + 1), url: this.homework.file})
-    }
+    this.selectStuHomeworkScore();
   },
   methods:{
     handleClose(done) {
@@ -321,10 +312,22 @@ export default {
     selectStuHomework() {
       let that = this
       axios.post("http://localhost:8088/homework/selectStuHomeworkCounts",qs.stringify({
-        homeworkId:this.homework.id
+        homeworkId:this.homework.id,
+        token: localStorage.getExpire('token')
       }))
           .then(function (response) {
             that.isCommit = response.data;
+          })
+    },
+    selectStuHomeworkScore(){
+      let that = this;
+      axios.post("http://localhost:8088/homework/selectStuHomeworkScore",qs.stringify({
+        homeworkId:this.homework.id,
+        token: localStorage.getExpire('token')
+      }))
+          .then(function (response) {
+            console.log(response.data);
+            that.score = response.data;
           })
     }
   }

@@ -159,7 +159,7 @@
                </el-table-column>
                <el-table-column label="得分" width="180">
                  <template slot-scope="scope">
-                   <el-input v-model="scope.row.score"></el-input>
+                   <el-input v-model="scope.row.score" type="number"></el-input>
                  </template>
                </el-table-column>
                <el-table-column label="操作">
@@ -248,6 +248,7 @@ export default {
           .then((response) => {
             if (response.data === "作答成功") {
               that.$message.success("作答成功!");
+              this.getStuHomework();
             }
           })
           .catch((error) => {
@@ -324,22 +325,29 @@ export default {
     },
     handleEdit(row) {
       let that = this;
-      axios.post("http://localhost:8088/correct/updateScore",qs.stringify({
-        userToken: localStorage.getExpire('token'),
-        id: this.homework.id,
-        stuAccount: row.account,
-        score:row.score
-      }))
-          .then(function (response) {
-            if (response.data === "打分成功") {
-              that.$message.success("打分成功!");
-              that.getStuHomeworkList();
-            }
-          })
-          .catch((error) => {
-            // 处理错误响应的逻辑
-            console.error("打分失败", error);
-          });
+      if (row.score === null || row.score ==='') {
+        that.$message.error("得分不能为空!");
+      }else if (row.score > 100 || row.score < 0){
+        that.$message.error("得分只能在0-100分之内!");
+      } else {
+        axios.post("http://localhost:8088/correct/updateScore",qs.stringify({
+          userToken: localStorage.getExpire('token'),
+          id: this.homework.id,
+          stuAccount: row.account,
+          score:row.score
+        }))
+            .then(function (response) {
+              if (response.data === "打分成功") {
+                that.$message.success("打分成功!");
+                that.getStuHomeworkList();
+              }
+            })
+            .catch((error) => {
+              // 处理错误响应的逻辑
+              console.error("打分失败", error);
+            });
+      }
+
     },
   }
 }
