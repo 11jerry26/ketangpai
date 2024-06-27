@@ -167,7 +167,11 @@ export default {
         code:this.code
       }))
           .then(function (response) {
-            that.homeworkList = response.data;
+            if (that.isStudent) {
+              that.homeworkList = response.data.filter(homework => homework.isRelease === true)
+            } else {
+              that.homeworkList = response.data;
+            }
           })
     },
     checkEndDate(rule, value, callback) {
@@ -218,8 +222,9 @@ export default {
     },
     loadYourRole() {
       let that = this;
-      axios.post("http://localhost:8088/user/selectRole",qs.stringify({
+      axios.post("http://localhost:8088/course/selectYourRole",qs.stringify({
         token: localStorage.getExpire('token'),
+        code: that.code
       }))
           .then(function (response) {
             that.role = response.data;

@@ -38,6 +38,8 @@
 
 <script>
 import MyAvatar from "@/components/MyAvatar.vue";
+import axios from "axios";
+import qs from "qs";
 
 export default {
 
@@ -54,8 +56,19 @@ export default {
   },
   mounted() {
     this.course = JSON.parse(this.$route.query.course);
+    this.code = this.course.code;
+    this.loadCourse();
   },
   methods:{
+    loadCourse() {
+      let that = this;
+      axios.post("http://localhost:8088/course/selectCourse",qs.stringify({
+        code:this.code
+      }))
+          .then(function (response) {
+            that.course = response.data;
+          })
+    },
     selector(index){
       if (this.$route.name !== index){
         this.select = index

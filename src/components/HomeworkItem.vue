@@ -194,6 +194,7 @@ export default {
     }
   },
   mounted() {
+    this.editForm.id = this.homework.id;
     this.getHomeWorkCounts();
     this.selectStuHomework();
     this.selectStuHomeworkScore();
