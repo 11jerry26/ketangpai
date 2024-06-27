@@ -1,16 +1,16 @@
 <template>
 <div>
   <div class="middle">
-    <el-tabs v-model="activeName" @tab-click="handleClick" v-if="isStu">
-      <el-tab-pane label="我学的" name="whatILearn" ></el-tab-pane>
-    </el-tabs>
-    <el-tabs v-model="activeName2" @tab-click="handleClick1" v-if="!isStu">
-      <el-tab-pane label="我教的" name="whatITeach" >
+<!--    <el-tabs v-model="activeName" @tab-click="handleClick" v-if="isStu">-->
+<!--      <el-tab-pane label="我学的" name="whatStuLearn" ></el-tab-pane>-->
+<!--    </el-tabs>-->
+    <el-tabs v-model="activeName2" @tab-click="handleClick1">
+      <el-tab-pane label="我教的" name="whatITeach" v-if="!isStu">
         <div class="empty-content" v-if="teachCourses.length === 0">
           <el-empty description="暂无课程"></el-empty>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="我协助的" name="whatIAssist">
+      <el-tab-pane label="我协助的" name="whatIAssist" v-if="!isStu">
         <div class="empty-content">
           <el-empty description="暂无课程"></el-empty>
         </div>
@@ -46,7 +46,12 @@
             <div class="right">
               <div class="setTop" @click="updateTopping(course)" v-if="isTops[courses.indexOf(course)] === 0">取消置顶</div>
               <div class="setTop" @click="updateTopping(course)" v-if="isTops[courses.indexOf(course)] === 1">置顶</div>
-              <img class="moreIcon" src="@/assets/images/afterLogin/more.svg" alt="" >
+              <el-dropdown>
+                <img class="moreIcon" src="@/assets/images/afterLogin/more.svg" alt="" >
+                <el-dropdown-menu slot="dropdown">
+                  <div @click="exitCourse(course)"><el-dropdown-item @click="exitCourse(course)">退课</el-dropdown-item></div>
+                </el-dropdown-menu>
+              </el-dropdown>
             </div>
           </div>
         </div>
@@ -74,7 +79,13 @@
             <div class="right">
               <div class="setTop" @click="updateTopping(course)" v-if="isTops[courses.indexOf(course)] === 1">取消置顶</div>
               <div class="setTop" @click="updateTopping(course)" v-if="isTops[courses.indexOf(course)] === 0">置顶</div>
-              <img class="moreIcon" src="@/assets/images/afterLogin/more.svg" alt="" >
+              <el-dropdown>
+                <img class="moreIcon" src="@/assets/images/afterLogin/more.svg" alt="" >
+                <el-dropdown-menu slot="dropdown">
+                  <div @click="deleteCourse(course)"><el-dropdown-item v-if="yourName === teacherResponsiblePersons[index]" @click="deleteCourse(course)" >删除</el-dropdown-item></div>
+                  <div @click="exitCourse(course)"><el-dropdown-item v-if="yourName !== teacherResponsiblePersons[index]" @click="exitCourse(course)">退课</el-dropdown-item></div>
+                </el-dropdown-menu>
+              </el-dropdown>
             </div>
           </div>
         </div>
@@ -105,7 +116,11 @@ export default {
       responsiblePersons:[],
       isTops:[],
       teachCourses:[],
+      teacherResponsiblePersons: [],
+      teacherIsTops:[],
       studyCourses:[],
+      studentResponsiblePersons: [],
+      studentIsTops:[],
       teaDivStyle:{
         display: 'block'
       },
@@ -160,6 +175,57 @@ export default {
     }
   },
   methods: {
+    deleteCourse(course) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        axios.post("http://localhost:8088/course/delete",course).then(response => {
+          if (response.data === '删除成功') {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+          } else {
+            this.$message.error("删除失败!");
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+    },
+    exitCourse(course) {
+      let that = this;
+      this.$confirm('此操作将退出该班级, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const formData = new FormData();
+        formData.append('course', JSON.stringify(course));
+        formData.append('token', localStorage.getExpire("token"));
+        axios.post("http://localhost:8088/course/deleteStu",formData)
+            .then(function (response) {
+              if (response.data === '退课成功'){
+                that.$message({
+                  type: 'success',
+                  message: '退课成功!'
+                });
+              } else {
+                that.$message.error("退课失败")
+              }
+            })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消退课'
+        });
+      });
+    },
     randomBackground(code) {
       let alpha = code[0];
       if (alpha === "A" || alpha === "B" || alpha === "C") {
@@ -221,10 +287,17 @@ export default {
             for (let i = 0; i < that.courses.length; i ++) {
               if (that.yourName === that.responsiblePersons[i]) {
                 that.teachCourses.push(that.courses[i]);
+                that.teacherResponsiblePersons.push(that.responsiblePersons[i]);
+                that.teacherIsTops.push(that.isTops[i]);
               } else {
-                that.studyCourses.push(that.courses[i])
+                that.studyCourses.push(that.courses[i]);
+                that.studentResponsiblePersons.push(that.responsiblePersons[i]);
+                that.studentIsTops.push(that.isTops[i]);
               }
             }
+            console.log(that.studyCourses)
+            console.log(that.studentResponsiblePersons)
+            console.log(that.studentIsTops)
           })
           .catch(error => console.error(error));
     },

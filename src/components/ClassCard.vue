@@ -20,7 +20,13 @@
           </div>
           <div class="right">
             <div class="setTop" @click="updateTopping(course)">取消置顶</div>
-            <img class="moreIcon" src="@/assets/images/afterLogin/more.svg" alt="" >
+            <el-dropdown>
+              <img class="moreIcon" src="@/assets/images/afterLogin/more.svg" alt="" >
+              <el-dropdown-menu slot="dropdown">
+                <div @click="deleteCourse(course)"><el-dropdown-item v-if="yourName === responsiblePersons[index]" @click="deleteCourse(course)" >删除</el-dropdown-item></div>
+                <div @click="exitCourse(course)"><el-dropdown-item v-if="yourName !== responsiblePersons[index]" @click="exitCourse(course)">退课</el-dropdown-item></div>
+              </el-dropdown-menu>
+            </el-dropdown>
           </div>
         </div>
       </div>
@@ -115,6 +121,58 @@ export default {
             location.reload();
           })
           .catch(error => console.error(error))
+    },
+    deleteCourse(course) {
+      let that = this;
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        axios.post("http://localhost:8088/course/delete",course).then(response => {
+          if (response.data === '删除成功') {
+            that.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+          } else {
+            that.$message.error("删除失败!");
+          }
+        })
+      }).catch(() => {
+        that.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+    },
+    exitCourse(course) {
+      let that = this;
+      this.$confirm('此操作将退出该班级, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const formData = new FormData();
+        formData.append('course', JSON.stringify(course));
+        formData.append('token', localStorage.getExpire("token"));
+        axios.post("http://localhost:8088/course/deleteStu",formData)
+            .then(function (response) {
+              if (response.data === '退课成功'){
+                that.$message({
+                  type: 'success',
+                  message: '退课成功!'
+                });
+              } else {
+                that.$message.error("退课失败")
+              }
+            })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消退课'
+        });
+      });
     }
   },
   created() {
@@ -282,5 +340,15 @@ export default {
   cursor: pointer;
   display: flex;
   align-items: center;
+}
+</style>
+
+<style scoped>
+.topClass .el-dropdown {
+  display: inline-block;
+  position: relative;
+  color: #606266;
+  font-size: 14px;
+  width: 20px;
 }
 </style>
