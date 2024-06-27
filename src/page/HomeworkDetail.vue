@@ -103,7 +103,7 @@
                     {{score}}分
                   </button>
                   <button v-else type="button" class="el-button el-button--primary el-button--small">
-                    <span v-if="stuHomework.message" @click="update">更新提交</span>
+                    <span v-if="stuHomework" @click="update">更新提交</span>
                     <span v-else @click="submit">提交</span>
                   </button>
                 </div>
@@ -123,28 +123,6 @@
                   </el-upload>
                 </el-form-item>
               </el-form>
-<!--              <div class="annex-box">-->
-<!--                <div class="title font16 mb24">-->
-<!--                  作业附件-->
-<!--                  <span class="font12 tip">1个</span>-->
-<!--                </div>-->
-<!--                <div class="attachment flex-between mb16">-->
-<!--                  <div class="flex-align file">-->
-<!--                    <div class="left">-->
-<!--                      <img src="@/assets/images/afterLogin/task.png" alt="task">-->
-<!--                    </div>-->
-<!--                    <div class="right">-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                  <div class="opt">-->
-<!--                    <div>-->
-<!--                      <button type="button" class="el-button el-button&#45;&#45;text el-button&#45;&#45;mini">-->
-<!--                        <span>下载</span>-->
-<!--                      </button>-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
             </div>
 
           </div>
@@ -165,48 +143,31 @@
              <el-table
                  :data="tableData"
                  style="width: 100%">
-               <el-table-column
-                   label="姓名"
-                   width="180"
-                   prop="name"
-               >
-               </el-table-column>
-               <el-table-column
-                   label="答案"
-                   width="400">
+               <el-table-column label="姓名" width="180" prop="name"></el-table-column>
+               <el-table-column label="答案" width="400">
                  <template slot-scope="scope">
-                   <el-input
-                       type="textarea"
+                   <el-input type="textarea"
                        :autosize="{ minRows: 2, maxRows: 4}"
                         v-model="scope.row.message">
                    </el-input>
                  </template>
                </el-table-column>
-               <el-table-column
-                   label="附件"
-                   width="200">
+               <el-table-column label="附件" width="200">
                  <template slot-scope="scope" v-if="scope.row.content!==''">
                    <el-link type="primary">下载</el-link>
                  </template>
-
                </el-table-column>
-               <el-table-column
-                   label="得分"
-                   width="180">
+               <el-table-column label="得分" width="180">
                  <template slot-scope="scope">
                    <el-input v-model="scope.row.score"></el-input>
                  </template>
-
                </el-table-column>
-
                <el-table-column label="操作">
-                 <template>
+                 <template slot-scope="scope">
                    <el-button
                        size="mini"
-                       type="danger">
-                     打分</el-button>
-
-
+                       type="danger"
+                       @click="handleEdit(scope.row)">打分</el-button>
                  </template>
                </el-table-column>
              </el-table>
@@ -239,10 +200,6 @@ export default {
         id:'',
         message:'',
         content:'',
-      },
-      contentList:[],
-      data:{
-        token:''
       },
       tableData: []
     };
@@ -283,13 +240,14 @@ export default {
   },
   methods: {
     submit(){
+      let that = this;
       const formData = new FormData();
       formData.append('stuHomework',JSON.stringify(this.submitForm));
       formData.append('userToken',localStorage.getExpire('token'));
       axios.post("http://localhost:8088/correct/create", formData)
           .then((response) => {
             if (response.data === "作答成功") {
-              this.$message.success("作答成功!");
+              that.$message.success("作答成功!");
             }
           })
           .catch((error) => {
@@ -298,13 +256,15 @@ export default {
           });
     },
     update(){
+      let that = this;
       const formData = new FormData();
       formData.append('stuHomework',JSON.stringify(this.submitForm));
       formData.append('userToken',localStorage.getExpire('token'));
       axios.post("http://localhost:8088/correct/update", formData)
           .then((response) => {
             if (response.data === "更新作答成功") {
-              this.$message.success("更新作答成功!");
+              that.$message.success("更新作答成功!");
+              that.getStuHomework();
             }
           })
           .catch((error) => {
@@ -340,6 +300,7 @@ export default {
             if (response.data){
               for (let i = 0; i < response.data.length; i++) {
                 that.tableData.push({
+                  account: response.data[i].account,
                   name: response.data[i].name,
                   message: response.data[i].message,
                   content: response.data[i].content,
@@ -360,6 +321,25 @@ export default {
       else if (tab.name==='third'){
         this.getStuHomeworkList()
       }
+    },
+    handleEdit(row) {
+      let that = this;
+      axios.post("http://localhost:8088/correct/updateScore",qs.stringify({
+        userToken: localStorage.getExpire('token'),
+        id: this.homework.id,
+        stuAccount: row.account,
+        score:row.score
+      }))
+          .then(function (response) {
+            if (response.data === "打分成功") {
+              that.$message.success("打分成功!");
+              that.getStuHomeworkList();
+            }
+          })
+          .catch((error) => {
+            // 处理错误响应的逻辑
+            console.error("打分失败", error);
+          });
     },
   }
 }
